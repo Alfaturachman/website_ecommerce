@@ -54,6 +54,9 @@ $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 $route['checkout/rajaongkir_cek_ongkir'] = 'checkout/rajaongkir_cek_ongkir';
 
+$route['shop/(men|women|unisex)/category/(:any)/(:num)'] = 'shop/gender_category/$1/$2/$3';
+$route['shop/(men|women|unisex)/category/(:any)'] = 'shop/gender_category/$1/$2';
+
 $route['admin'] = 'admin/admin';
 $route['admin/category/(:num)'] = 'admin/category/index/$1';
 $route['admin/product/(:num)'] = 'admin/product/index/$1';

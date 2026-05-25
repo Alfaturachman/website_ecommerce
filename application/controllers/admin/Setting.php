@@ -10,10 +10,8 @@ class Setting extends MY_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->id	= $this->session->userdata('id');
-        if (!$this->session->userdata('username')) {
-            redirect('admin');
-        }
+        $this->id = $this->session->userdata('id');
+        $this->_requireAdmin();
     }
     
 

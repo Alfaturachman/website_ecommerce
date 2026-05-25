@@ -1,35 +1,35 @@
 <?php
-if ($status == 'waiting') {
-    $badge_status   = 'badge-secondary';
-    $status         = 'Menunggu Pembayaran';
-}
-
-if ($status == 'paid') {
-    $badge_status   = 'badge-primary';
-    $status         = 'Dibayar';
-}
-
-if ($status == 'process') {
-    $badge_status   = 'badge-warning';
-    $status         = 'Diproses Penjual';
-}
-
-if ($status == 'delivered') {
-    $badge_status   = 'badge-info';
-    $status         = 'Dikirim';
-}
-
-if ($status == 'done') {
-    $badge_status   = 'badge-success';
-    $status         = 'Selesai';
-}
-
-if ($status == 'cancel') {
-    $badge_status   = 'badge-danger';
-    $status         = 'Dibatalkan';
+switch ($status) {
+    case 'waiting':
+        $badge = 'badge-secondary';
+        $label = 'Menunggu Pembayaran';
+        break;
+    case 'paid':
+        $badge = 'badge-primary';
+        $label = 'Dibayar';
+        break;
+    case 'process':
+        $badge = 'badge-warning';
+        $label = 'Diproses Penjual';
+        break;
+    case 'delivered':
+        $badge = 'badge-info';
+        $label = 'Dikirim';
+        break;
+    case 'done':
+        $badge = 'badge-success';
+        $label = 'Selesai';
+        break;
+    case 'cancel':
+        $badge = 'badge-danger';
+        $label = 'Dibatalkan';
+        break;
+    default:
+        $badge = 'badge-secondary';
+        $label = $status;
 }
 ?>
 
-<?php if ($status) : ?>
-    <span class="badge badge-pill <?= $badge_status ?>"><?= $status ?></span>
+<?php if ($label) : ?>
+    <span class="badge badge-pill <?= $badge ?>"><?= $label ?></span>
 <?php endif ?>

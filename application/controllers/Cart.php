@@ -9,13 +9,8 @@ class Cart extends MY_Controller
     public function __construct()
     {
         parent::__construct();
-        $is_login = $this->session->userdata('is_login');
         $this->id = $this->session->userdata('id');
-
-        if (!$is_login) {
-            redirect(base_url(), 'refresh');
-            return;
-        }
+        $this->_requireLogin();
     }
 
     public function index()

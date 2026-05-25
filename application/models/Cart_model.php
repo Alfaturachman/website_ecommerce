@@ -9,4 +9,4 @@ class Cart_model extends MY_Model
 
 }
 
-/* End of file Card_model.php */
+/* End of file Cart_model.php */

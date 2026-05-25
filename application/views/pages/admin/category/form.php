@@ -4,16 +4,16 @@
     </div>
     <div class="card-body">
         <form action="<?= $form_action ?>" method="post">
-            <?= isset($input->id) ? '<input type="hidden" name="id" value="' . $input->id . '">' : '' ?>
+            <?= isset($input->id) ? '<input type="hidden" name="id" value="' . e($input->id) . '">' : '' ?>
             <div class="form-group">
                 <label for="title">Kategori</label>
-                <input type="text" name="title" id="title" class="form-control" value="<?= $input->title ?>"
+                <input type="text" name="title" id="title" class="form-control" value="<?= e($input->title) ?>"
                     onkeyup="createSlug()" placeholder="Masukan Kategori" required autofocus>
                 <?= form_error('title') ?>
             </div>
             <div class="form-group">
                 <label for="slug">Slug</label>
-                <input type="text" name="slug" id="slug" class="form-control" value="<?= $input->slug ?>" required
+                <input type="text" name="slug" id="slug" class="form-control" value="<?= e($input->slug) ?>" required
                     readonly>
                 <?= form_error('slug') ?>
             </div>

@@ -46,16 +46,11 @@
                             <td><?= $no ?></td>
                             <td>
                                 <p>
-                                    <?= $row->user_name ?>
+                                    <?= e($row->user_name) ?>
                                 </p>
                             </td>
-                            <!-- <td>
-                                <p>
-                                    <img src="<?= $row->image ? base_url("/images/profile/$row->image") : base_url("/images/profile/avatar.png") ?>" alt="" width="100" class="img-responsive">
-                                </p>
-                            </td> -->
                             <td>
-                                <?= $row->user_email ?>
+                                <?= e($row->user_email) ?>
                             </td>
                             <td>
                                 <?= form_open(base_url("admin/customer/delete/$row->id"), ['method' => 'POST']) ?>

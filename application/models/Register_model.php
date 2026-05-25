@@ -23,7 +23,7 @@ class Register_model extends MY_Model
 
     public function getValidationRules()
     {
-        $validateRules = [
+        $validationRules = [
             [
                 'field' => 'name',
                 'label' => 'Nama',
@@ -59,7 +59,7 @@ class Register_model extends MY_Model
             ]
         ];
 
-        return $validateRules;
+        return $validationRules;
     }
 
     public function run($input)

@@ -1,37 +1,5 @@
-<style>
-    body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-    }
-
-    .full-height {
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        /* align-items: center; */
-    }
-
-    .site-blocks-table thead th {
-        /* padding-bottom: rem; */
-        border-width: 0px !important;
-        vertical-align: middle;
-        color: #fff;
-        /* font-size: 18px; */
-        border-top: 1px solid #3b5d50 !important;
-        border-bottom: 1px solid #3b5d50 !important;
-    }
-
-    .card {
-        border-radius: 10px
-    }
-</style>
-
 <div class="full-height">
     <div class="container my-5">
-
-        <!-- <?php $this->load->view('layouts/_alerts'); ?> -->
-
         <div class="row">
             <div class="col-md-3 col-sm-12">
                 <?php $this->load->view('layouts/user/_sidebar') ?>
@@ -57,13 +25,13 @@
                                     <?php foreach ($content as $row) : ?>
                                         <tr>
                                             <td>
-                                                <strong>#<?= $row->invoice ?></strong>
+                                                <strong>#<?= e($row->invoice) ?></strong>
                                             </td>
                                             <td>
                                                 <?= date('d-m-Y', strtotime($row->date)) ?>
                                             </td>
                                             <td>
-                                                Rp <?= number_format($row->total, 0, ',', '.') ?>
+                                                Rp <?= formatRupiah($row->total) ?>
                                             </td>
                                             <td>
                                                 <?php $this->load->view('layouts/_status', ['status' => $row->status]) ?>
@@ -76,10 +44,6 @@
                                 </tbody>
                             </table>
                         </div>
-
-                        <!-- <nav aria-label="Page navigation example" class="mt-2">
-                            <?= $pagination ?>
-                        </nav> -->
                     </div>
                 </div>
             </div>

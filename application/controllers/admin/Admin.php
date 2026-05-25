@@ -9,7 +9,6 @@ class Admin extends CI_Controller
     {
         parent::__construct();
         $this->load->library('form_validation');
-        //Do your magic here
     }
     
     public function index()

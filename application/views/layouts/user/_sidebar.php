@@ -39,8 +39,6 @@ li.border-none {
 }
 </style>
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
 <div class="card p-3">
     <p class="text-center"><strong>PENGATURAN</strong></p>
     <ul class="border-none m-0 p-0">

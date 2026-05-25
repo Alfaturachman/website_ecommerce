@@ -48,8 +48,8 @@
                     foreach ($content as $row) : $no++; ?>
                     <tr>
                         <td><?= $no ?></td>
-                        <td><?= $row->title ?></td>
-                        <td><?= $row->slug ?></td>
+                        <td><?= e($row->title) ?></td>
+                        <td><?= e($row->slug) ?></td>
                         <td>
                             <?= form_open("admin/category/delete/$row->id", ['method' => 'POST']) ?>
                             <?= form_hidden('id', $row->id) ?>

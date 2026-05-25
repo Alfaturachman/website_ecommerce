@@ -36,32 +36,17 @@ class Slider_model extends MY_Model
 
     public function uploadImage($fieldName, $fileName)
     {
-        $config = [
-            'upload_path'       => './images/slider',
-            'file_name'         => $fileName,
-            'allowed_types'     => 'jpg|png|jpeg|JPG|PNG',
-            'max_size'          => 20480,
-            'max_width'         => 0,
-            'max_height'        => 500,
-            'overwrite'         => true,
-            'file_ext_tolower'  => true
-        ];
-
-        $this->load->library('upload', $config);
-
-        if ($this->upload->do_upload($fieldName)) {
-            return $this->upload->data();
-        } else {
-            $this->session->set_flashdata('image_error', $this->upload->display_errors('', ''));
-            return false;
-        }
+        $this->load->library('image_uploader');
+        return $this->image_uploader->upload($fieldName, $fileName, './images/slider', [
+            'allowed_types' => 'jpg|png|jpeg|JPG|PNG',
+            'max_height'    => 500
+        ]);
     }
 
     public function deleteImage($fileName)
     {
-        if (file_exists("./images/slider/$fileName")) {
-            unlink("./images/slider/$fileName");
-        }
+        $this->load->library('image_uploader');
+        $this->image_uploader->delete($fileName, './images/slider');
     }
 }
 

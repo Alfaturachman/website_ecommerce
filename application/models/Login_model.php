@@ -25,7 +25,7 @@ class Login_model extends MY_Model
             ],
             [
                 'field' =>  'password',
-                'label' =>  'Passwrod',
+                'label' =>  'Password',
                 'rules' =>  'required'
             ]
         ];

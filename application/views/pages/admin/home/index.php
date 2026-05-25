@@ -84,8 +84,8 @@
                                 <tr>
                                     <td><a href="<?= base_url("admin/order/detail/$row_paid->id") ?>"><strong>#<?= $row_paid->invoice ?></strong></a>
                                     </td>
-                                    <td><?= str_replace('-', '/', date("d-m-Y", strtotime($row_paid->date))) ?></td>
-                                    <td>Rp<?= number_format($row_paid->total + $row_paid->cost_courier, 0, ',', '.') ?>,-
+                                    <td><?= date('d/m/Y', strtotime($row_paid->date)) ?></td>
+                                    <td>Rp<?= formatRupiah($row_paid->total + $row_paid->cost_courier) ?>
                                     </td>
                                 </tr>
                             <?php endforeach ?>
@@ -120,8 +120,8 @@
                                 <tr>
                                     <td><a href="<?= base_url("admin/order/detail/$row_process->id") ?>"><strong>#<?= $row_process->invoice ?></strong></a>
                                     </td>
-                                    <td><?= str_replace('-', '/', date("d-m-Y", strtotime($row_process->date))) ?></td>
-                                    <td>Rp<?= number_format($row_process->total + $row_process->cost_courier, 0, ',', '.') ?>,-
+                                    <td><?= date('d/m/Y', strtotime($row_process->date)) ?></td>
+                                    <td>Rp<?= formatRupiah($row_process->total + $row_process->cost_courier) ?>
                                     </td>
                                 </tr>
                             <?php endforeach ?>

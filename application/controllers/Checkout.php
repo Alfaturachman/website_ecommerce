@@ -10,13 +10,8 @@ class Checkout extends MY_Controller
     {
         parent::__construct();
         $this->load->library('rajaongkir');
-        $is_login = $this->session->userdata('is_login');
         $this->id = $this->session->userdata('id');
-
-        if (!$is_login) {
-            redirect(base_url(), 'refresh');
-            return;
-        }
+        $this->_requireLogin();
     }
 
     public function index($input = null)
@@ -52,7 +47,7 @@ class Checkout extends MY_Controller
             ['address' => $userData->address ?? '']
         );
 
-        $data['title']     = "Chekout";
+        $data['title']     = "Checkout";
         $data['page']      = "pages/users/checkout";
 
         $this->view($data);
@@ -134,57 +129,27 @@ class Checkout extends MY_Controller
 
     public function rajaongkir_cek_kabupaten()
     {
-        // Mengambil provinsi_id dari parameter GET
         $provinsi_id = $this->input->get('provinsi');
 
-        // Mengecek apakah provinsi_id telah diberikan
         if (empty($provinsi_id)) {
             echo "<option value=''>Provinsi ID is required.</option>";
             return;
         }
 
-        $api_key = "b89355f9434e0df1e842c84906a52cb5";
+        $response = json_decode($this->rajaongkir->city($provinsi_id), true);
 
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => "http://api.rajaongkir.com/starter/city?province=$provinsi_id",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "GET",
-            CURLOPT_HTTPHEADER => array(
-                "key: $api_key"
-            ),
-        ));
-
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-
-        curl_close($curl);
-
-        if ($err) {
-            echo "<option value=''>Error fetching cities.</option>";
-        } else {
-            $data = json_decode($response, true);
-
-            // Check if the expected keys and arrays exist
-            if (isset($data['rajaongkir']['results']) && is_array($data['rajaongkir']['results'])) {
-                // Menampilkan dropdown kabupaten/kota
-                echo "<option value=''>- Pilih Kabupaten / Kota -</option>";
-                foreach ($data['rajaongkir']['results'] as $result) {
-                    echo "<option value='" . $result['city_id'] . "'>" . $result['city_name'] . "</option>";
-                }
-            } else {
-                echo "<option value=''>No cities available.</option>";
+        if (isset($response['rajaongkir']['results']) && is_array($response['rajaongkir']['results'])) {
+            echo "<option value=''>- Pilih Kabupaten / Kota -</option>";
+            foreach ($response['rajaongkir']['results'] as $result) {
+                echo "<option value='" . $result['city_id'] . "'>" . $result['city_name'] . "</option>";
             }
+        } else {
+            echo "<option value=''>No cities available.</option>";
         }
     }
 
     public function rajaongkir_cek_ongkir()
     {
-        // Get post data
         $id_kabupaten = $this->input->get('kabupaten');
         $courier = $this->input->get('courier');
 
@@ -194,62 +159,20 @@ class Checkout extends MY_Controller
             ->row()
             ->quantity;
 
-        // Calculate shipping cost using RajaOngkir API
         $berat = $weightTotal * 250;
-        $url = "http://api.rajaongkir.com/starter/cost";
+        $cost = json_decode($this->rajaongkir->cost(152, $id_kabupaten, $berat, $courier), true);
 
-        $data = array(
-            'origin' => '152', // Your origin code, you might need to change this
-            'destination' => $id_kabupaten,
-            'weight' => $berat,
-            'courier' => $courier
-        );
-
-        $headers = array(
-            "content-type: application/x-www-form-urlencoded",
-            "key: b89355f9434e0df1e842c84906a52cb5"
-        );
-
-        // Initialize cURL session
-        $curl = curl_init();
-
-        // Set cURL options
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => http_build_query($data),
-            CURLOPT_HTTPHEADER => $headers,
-        ));
-
-        // Execute cURL session
-        $response = curl_exec($curl);
-
-        // Close cURL session
-        curl_close($curl);
-
-        // Parse the response as JSON
-        $cost = json_decode($response, true);
-
-        // Log the complete API response for debugging
         log_message('debug', 'RajaOngkir API Response: ' . json_encode($cost));
 
-        // Process the API response and extract the shipping cost
         $ongkirResults = 0;
         if (isset($cost['rajaongkir']['results'][0]['costs'][0]['cost'][0]['value'])) {
             $ongkirResults = $cost['rajaongkir']['results'][0]['costs'][0]['cost'][0]['value'];
         }
 
-        // Log API errors (if any)
         if (isset($cost['rajaongkir']['status']) && $cost['rajaongkir']['status']['code'] != 200) {
             log_message('error', 'RajaOngkir API Error: ' . json_encode($cost['rajaongkir']['status']));
         }
 
-        // Return the shipping cost as JSON
         $this->output->set_content_type('application/json')->set_output(json_encode(['shipping_cost' => $ongkirResults]));
     }
 }

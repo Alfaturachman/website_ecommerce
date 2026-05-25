@@ -1,151 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <title><?= isset($title) ? $title : 'CISHOP' ?> - Online Shop</title>
+    <title><?= isset($title) ? $title : 'NOMADENSTUFF' ?> — Online Thrift Store</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- Montserrat Font -->
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700&display=swap" rel="stylesheet">
-
-    <!-- Bootstrap CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
-    <link rel="stylesheet" href="<?= base_url() ?>assets/owl-carousel/assets/owl.carousel.min.css">
-    <link rel="stylesheet" href="<?= base_url() ?>assets/owl-carousel/assets/owl.theme.default.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>">
+    <style>
+        * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
+        body { background: #faf7f2; }
+        a:hover { text-decoration: none; }
+    </style>
 </head>
-
 <body>
 
-    <!-- Navbar -->
     <?php $this->load->view('layouts/user/_navbar') ?>
-    <!-- End Navbar -->
 
-    <!-- Content -->
-    <?php $this->load->view($page) ?>
-    <!-- End Content -->
+    <main>
+        <?php $this->load->view($page) ?>
+    </main>
 
-    <!-- Footer -->
-    <div class="mt-3">
-        <footer class="text-dark bg-light">
-            <div class="container pt-5 pb-3">
-                <h4 class="font-weight-bold">NOMADENSTUFF</h4>
-                <div class="row">
-                    <div class="col-lg-5 col-sm-12 mb-3">
-                        <div style="text-align: justify;">
-                            <p>NOMADENSTUFF adalah sebuah toko thrifting yang menawarkan berbagai pilihan pakaian dengan
-                                konsep unik dan berbeda. Kami mengkhususkan diri dalam menyediakan pakaian bekas
-                                berkualitas
-                                tinggi dengan harga terjangkau.</p>
-                        </div>
+    <footer style="background:#1a1a1a;margin-top:4rem">
+        <div style="max-width:1280px;margin:0 auto;padding:4rem 1.5rem 2rem">
+            <div class="row">
+                <div class="col-lg-5 mb-4">
+                    <h4 style="font-weight:800;font-size:1.4rem;color:#fff;letter-spacing:-.5px">NOMADENSTUFF</h4>
+                    <p style="color:rgba(255,255,255,.5);font-size:.9rem;line-height:1.7;margin-top:.75rem;max-width:360px">
+                        Curated thrift store — every piece has a story. We bring you pre-loved clothing with character, quality, and soul.
+                    </p>
+                </div>
+                <div class="col-lg-4 mb-4">
+                    <h6 style="font-weight:700;font-size:.8rem;color:rgba(255,255,255,.35);letter-spacing:2px;text-transform:uppercase;margin-bottom:1rem">Contact</h6>
+                    <p style="color:rgba(255,255,255,.6);font-size:.9rem;line-height:1.8">
+                        Jl. Taman Siswa, Sekaran, Gunung Pati<br>
+                        Kota Semarang, Jawa Tengah 50229
+                    </p>
+                    <div style="display:flex;gap:.75rem;margin-top:.75rem">
+                        <a href="https://www.instagram.com/nomadenstuff" target="_blank" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#fff;transition:.3s" onmouseover="this.style.background='#d4a853'" onmouseout="this.style.background='rgba(255,255,255,.08)'">
+                            <i class="fab fa-instagram" style="font-size:.9rem"></i>
+                        </a>
+                        <a href="https://wa.me/6288229889507" target="_blank" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#fff;transition:.3s" onmouseover="this.style.background='#d4a853'" onmouseout="this.style.background='rgba(255,255,255,.08)'">
+                            <i class="fab fa-whatsapp" style="font-size:.9rem"></i>
+                        </a>
+                        <a href="https://shopee.co.id/nomadenstuff_" target="_blank" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#fff;transition:.3s;font-size:.8rem;font-weight:700" onmouseover="this.style.background='#d4a853'" onmouseout="this.style.background='rgba(255,255,255,.08)'">
+                            S
+                        </a>
                     </div>
-                    <div class="col-lg-4 col-sm-12 mb-3">
-                        <style>
-                            a {
-                                color: black;
-                                text-decoration: none;
-                            }
-
-                            a:hover {
-                                color: gray;
-                                text-decoration: none;
-                            }
-                        </style>
-                        <div class="row">
-                            <div class="col">
-                                <a href="https://shopee.co.id/nomadenstuff_?smtt=0.0.9" class="text-dark mr-3">
-                                    <!-- <i class="fa-solid fa-location-dot"></i> -->
-                                    Jl. Taman Siswa, Sekaran, Gunung Pati, Kota Semarang, Jawa Tengah 50229
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-12 mb-3">
-                        <div class="row">
-                            <div class="col">
-                                <a href="https://www.instagram.com/nomadenstuff?igsh=YzVkODRmOTdmMw==" class="text-dark mr-3">
-                                    <i class="fab fa-instagram"></i> @nomadenstuff
-                                </a>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <a href="https://wa.me/6288229889507" class="text-dark mr-3">
-                                    <i class="fab fa-whatsapp"></i> +62 88 2298-89507
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- <a href="" class="text-white mr-3">
-                                <i class="fab fa-facebook-f">
-
-                                </i>
-                            </a> -->
-                        <!-- <a href="" class="text-white mr-3">
-                                <i class="fab fa-twitter">
-
-                                </i>
-                            </a> -->
-                        <!-- <a href="" class="text-white mr-3">
-                                <i class="fab fa-linkedin-in"></i>
-                            </a> -->
-                        <!-- <a href="" class="text-white mr-3">
-								<i class="fab fa-youtube"></i>
-							</a> -->
+                </div>
+                <div class="col-lg-3 mb-4">
+                    <h6 style="font-weight:700;font-size:.8rem;color:rgba(255,255,255,.35);letter-spacing:2px;text-transform:uppercase;margin-bottom:1rem">Links</h6>
+                    <div style="display:flex;flex-direction:column;gap:.5rem">
+                        <a href="<?= base_url('shop') ?>" style="color:rgba(255,255,255,.6);font-size:.9rem;transition:.3s">Shop All</a>
+                        <a href="<?= base_url('shop/men') ?>" style="color:rgba(255,255,255,.6);font-size:.9rem;transition:.3s">Men's</a>
+                        <a href="<?= base_url('shop/women') ?>" style="color:rgba(255,255,255,.6);font-size:.9rem;transition:.3s">Women's</a>
+                        <a href="<?= base_url('myorder') ?>" style="color:rgba(255,255,255,.6);font-size:.9rem;transition:.3s">My Orders</a>
                     </div>
                 </div>
             </div>
-            <div class="mt-1 border-top">
-                <div class="container mt-3">
-                    <div class="row d-flex justify-content-center align-items-center">
-                        <div class="col-lg-6 col-sm-12">
-                            <p><strong>&copy; 2024 All Reserved Alfaturachman Maulana Pahlevi</strong></p>
-                        </div>
-                        <!-- <div class="col-lg-6 col-sm-12">
-							<a href="" class="text-white">Developer [nfl_glbrnn]</a> |
-							<a href="" class="text-white">Kebijakan Privasi</a> |
-							<a href="" class="text-white">Persyaratan & Ketentuan</a>
-						</div> -->
-                    </div>
-                </div>
+            <div style="border-top:1px solid rgba(255,255,255,.06);padding-top:1.5rem;margin-top:2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem">
+                <p style="color:rgba(255,255,255,.3);font-size:.8rem;margin:0">&copy; 2024 Alfaturachman Maulana Pahlevi</p>
+                <p style="color:rgba(255,255,255,.3);font-size:.8rem;margin:0">Thrift with purpose.</p>
             </div>
-        </footer>
-    </div>
-    <!-- End Footer -->
+        </div>
+    </footer>
 
-
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
-    </script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/js/all.min.js"></script>
-    <script type="text/javascript" src="<?= base_url() ?>assets/owl-carousel/owl.carousel.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-
-            $("#owl-demo").owlCarousel({
-
-                navigation: true, // Show next and prev buttons
-                loop: true,
-                autoplay: true,
-                autoplayTimeout: 5000,
-
-                slideSpeed: 300,
-                paginationSpeed: 400,
-
-                items: 1,
-                itemsDesktop: false,
-                itemsDesktopSmall: false,
-                itemsTablet: false,
-                itemsMobile: false
-
-            });
-
-        });
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
-
 </html>

@@ -1,111 +1,126 @@
-<style>
-.product-item {
-    text-align: center;
-    text-decoration: none;
-    display: block;
-    position: relative;
-    padding-bottom: 25px;
-    cursor: pointer;
-}
-
-.product-item .product-thumbnail {
-    top: 0;
-    -webkit-transition: 0.3s all ease;
-    -o-transition: 0.3s all ease;
-    transition: 0.3s all ease;
-}
-
-.product-item h3 {
-    font-weight: 600;
-    font-size: 16px;
-}
-
-.product-item strong {
-    font-weight: 800 !important;
-    font-size: 18px !important;
-}
-
-.product-item h3,
-.product-item strong {
-    color: #2f2f2f;
-    text-decoration: none;
-}
-
-.product-item .card {
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
-}
-
-.product-item:hover .product-thumbnail {
-    transform: scale(1.025);
-    transition: transform 0.3s ease-in-out;
-}
-
-.product-item:hover:before {
-    height: 70%;
-}
-</style>
-
-<div class="container my-5">
-    <div class="row">
-        <div class="col-md-10 col sm-12">
-            <h4>Kategori: <?= isset($category) ? $category : 'Semua Kategori' ?></h4>
-            <div class="row text-center mt-3 mb-4">
-                <?php foreach ($content as $row) : ?>
-                <div class="col-6 col-lg-3 col-sm-6 mb-4">
-                    <a class="product-item" href="<?= base_url("shop/detail/{$row->product_slug}") ?>">
-                        <div class="card">
-                            <img src="<?= $row->image ? base_url("images/product/{$row->image}") : base_url("images/product/default.jpg") ?>"
-                                class="img-fluid product-thumbnail" />
-                            <div class="card-body">
-                                <h3 class="product-title"><?= $row->product_title ?></h3>
-                                <strong class="product-price">
-                                    <p class="mb-0">IDR <?= number_format($row->price, 0, ',', '.') ?></p>
-                                </strong>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <?php endforeach ?>
-            </div>
-            <!-- <nav arial-label="Page navigation example" class="mt-2">
-                <?= $pagination ?>
-            </nav> -->
+<div style="max-width:1280px;margin:0 auto;padding:2rem 1.5rem">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:.75rem">
+        <div>
+            <h1 style="font-size:1.35rem;font-weight:700;color:#1a1a1a;margin:0"><?php if (isset($category)) : ?><?= $gender ? genderLabel($gender) . "'s " : '' ?><?= e($category) ?><?php elseif (isset($gender) && $gender) : ?><?= genderLabel($gender) ?>'s Collection<?php else : ?>Shop All<?php endif ?></h1>
+            <p style="color:#8a8a8a;font-size:.85rem;margin:.25rem 0 0"><?php if (isset($category)) : ?><?= $gender ? genderLabel($gender) . "'s " : '' ?><?= e($category) ?><?php elseif (isset($gender) && $gender) : ?>All <?= genderLabel($gender) ?>'s styles<?php else : ?>All Categories<?php endif ?></p>
         </div>
-        <div class="col-md-2 col-sm-12">
-            <div class="card">
-                <div class="card-header">
-                    Kategori
+    </div>
+
+    <div class="shop-layout shop-layout--mobile" style="display:grid;grid-template-columns:240px 1fr;gap:2rem">
+        <aside>
+            <div style="background:#fff;border-radius:20px;padding:1.5rem;border:1px solid #f0f0f0;box-shadow:0 4px 16px rgba(0,0,0,.04);position:sticky;top:5rem">
+
+                <!-- Gender -->
+                <div style="margin-bottom:1.25rem">
+                    <h6 style="font-size:.65rem;font-weight:700;color:#999;letter-spacing:1.5px;text-transform:uppercase;margin:0 0 .75rem">Gender</h6>
+                    <div style="display:flex;flex-wrap:wrap;gap:.45rem">
+                        <?php $genders = ['' => 'All', 'L' => 'Men', 'W' => 'Women', 'U' => 'Unisex'] ?>
+                        <?php $activeGender = $gender ?? '' ?>
+                        <?php foreach ($genders as $code => $label) : ?>
+                        <?php $isActive = $activeGender === $code ?>
+                        <a href="<?= $code ? base_url("shop/" . strtolower($label)) : base_url('shop') ?>"
+                           style="padding:.4rem .85rem;border-radius:100px;font-size:.78rem;font-weight:600;text-decoration:none;transition:.2s;background:<?= $isActive ? '#1a1a1a' : '#f2f2f2' ?>;color:<?= $isActive ? '#fff' : '#666' ?>"
+                           onmouseover="this.style.background='<?= $isActive ? '#1a1a1a' : '#e0e0e0' ?>'"
+                           onmouseout="this.style.background='<?= $isActive ? '#1a1a1a' : '#f2f2f2' ?>'"><?= $label ?></a>
+                        <?php endforeach ?>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <?php foreach (getCategories() as $categoryItem) : ?>
-                    <a href="<?= base_url("/shop/category/{$categoryItem->slug}") ?>"
-                        class=""><?= $categoryItem->title ?></a>
-                    <hr>
+
+                <div style="height:1px;background:#f0f0f0;margin:0 0 1.25rem"></div>
+
+                <!-- Categories -->
+                <h6 style="font-size:.65rem;font-weight:700;color:#999;letter-spacing:1.5px;text-transform:uppercase;margin:0 0 .75rem">Categories</h6>
+                <div style="display:flex;flex-direction:column;gap:.15rem">
+                    <?php $baseUrl = $gender ? base_url('shop/' . strtolower(genderLabel($gender))) : base_url('shop') ?>
+                    <a href="<?= $baseUrl ?>"
+                       style="display:flex;align-items:center;gap:.5rem;padding:.45rem .75rem;border-radius:8px;font-size:.82rem;font-weight:500;color:#1a1a1a;text-decoration:none;transition:.15s;background:<?= !isset($category) ? '#f5f5f5' : 'transparent' ?>;border-left:3px solid <?= !isset($category) ? '#1a1a1a' : 'transparent' ?>"
+                       onmouseover="this.style.background='#f5f5f5'"
+                       onmouseout="this.style.background='<?= !isset($category) ? '#f5f5f5' : 'transparent' ?>'">All Items</a>
+
+                    <?php $cats = $gender ? getCategories($gender) : getCategories() ?>
+                    <?php foreach ($cats as $cat) : ?>
+                    <a href="<?= $gender ? base_url("shop/" . strtolower(genderLabel($gender)) . "/category/{$cat->slug}") : base_url("/shop/category/{$cat->slug}") ?>"
+                       style="display:flex;align-items:center;gap:.5rem;padding:.45rem .75rem;border-radius:8px;font-size:.82rem;font-weight:500;color:#555;text-decoration:none;transition:.15s;background:<?= (isset($category) && $category == $cat->title) ? '#f5f5f5' : 'transparent' ?>;border-left:3px solid <?= (isset($category) && $category == $cat->title) ? '#1a1a1a' : 'transparent' ?>"
+                       onmouseover="this.style.background='#f5f5f5'"
+                       onmouseout="this.style.background='<?= (isset($category) && $category == $cat->title) ? '#f5f5f5' : 'transparent' ?>'"><?= e($cat->title) ?></a>
                     <?php endforeach ?>
                 </div>
             </div>
-        </div>
+        </aside>
+
+        <main>
+            <div class="mobile-categories" style="display:none;flex-direction:column;gap:0;margin-bottom:1.5rem;background:#fff;border-radius:20px;padding:1.25rem;border:1px solid #f0f0f0;box-shadow:0 4px 16px rgba(0,0,0,.04)">
+
+                <div style="margin-bottom:1rem">
+                    <h6 style="font-size:.65rem;font-weight:700;color:#999;letter-spacing:1.5px;text-transform:uppercase;margin:0 0 .75rem">Gender</h6>
+                    <div style="display:flex;flex-wrap:wrap;gap:.45rem">
+                        <?php $genders = ['' => 'All', 'L' => 'Men', 'W' => 'Women', 'U' => 'Unisex'] ?>
+                        <?php $activeGender = $gender ?? '' ?>
+                        <?php foreach ($genders as $code => $label) : ?>
+                        <?php $isActive = $activeGender === $code ?>
+                        <a href="<?= $code ? base_url("shop/" . strtolower($label)) : base_url('shop') ?>"
+                           style="padding:.4rem .85rem;border-radius:100px;font-size:.78rem;font-weight:600;text-decoration:none;transition:.2s;background:<?= $isActive ? '#1a1a1a' : '#f2f2f2' ?>;color:<?= $isActive ? '#fff' : '#666' ?>"
+                           onmouseover="this.style.background='<?= $isActive ? '#1a1a1a' : '#e0e0e0' ?>'"
+                           onmouseout="this.style.background='<?= $isActive ? '#1a1a1a' : '#f2f2f2' ?>'"><?= $label ?></a>
+                        <?php endforeach ?>
+                    </div>
+                </div>
+
+                <div style="height:1px;background:#f0f0f0;margin:0 0 1rem"></div>
+
+                <h6 style="font-size:.65rem;font-weight:700;color:#999;letter-spacing:1.5px;text-transform:uppercase;margin:0 0 .75rem">Categories</h6>
+                <div style="display:flex;flex-direction:column;gap:.15rem">
+                    <?php $baseUrl = $gender ? base_url('shop/' . strtolower(genderLabel($gender))) : base_url('shop') ?>
+                    <a href="<?= $baseUrl ?>"
+                       style="display:flex;align-items:center;gap:.5rem;padding:.45rem .75rem;border-radius:8px;font-size:.82rem;font-weight:500;color:#1a1a1a;text-decoration:none;transition:.15s;background:<?= !isset($category) ? '#f5f5f5' : 'transparent' ?>;border-left:3px solid <?= !isset($category) ? '#1a1a1a' : 'transparent' ?>"
+                       onmouseover="this.style.background='#f5f5f5'"
+                       onmouseout="this.style.background='<?= !isset($category) ? '#f5f5f5' : 'transparent' ?>'">All Items</a>
+
+                    <?php $cats = $gender ? getCategories($gender) : getCategories() ?>
+                    <?php foreach ($cats as $cat) : ?>
+                    <a href="<?= $gender ? base_url("shop/" . strtolower(genderLabel($gender)) . "/category/{$cat->slug}") : base_url("/shop/category/{$cat->slug}") ?>"
+                       style="display:flex;align-items:center;gap:.5rem;padding:.45rem .75rem;border-radius:8px;font-size:.82rem;font-weight:500;color:#555;text-decoration:none;transition:.15s;background:<?= (isset($category) && $category == $cat->title) ? '#f5f5f5' : 'transparent' ?>;border-left:3px solid <?= (isset($category) && $category == $cat->title) ? '#1a1a1a' : 'transparent' ?>"
+                       onmouseover="this.style.background='#f5f5f5'"
+                       onmouseout="this.style.background='<?= (isset($category) && $category == $cat->title) ? '#f5f5f5' : 'transparent' ?>'"><?= e($cat->title) ?></a>
+                    <?php endforeach ?>
+                </div>
+            </div>
+            <?php if (empty($content)) : ?>
+                <div style="text-align:center;padding:4rem 1rem;background:#fff;border-radius:24px;border:1px solid #f0f0f0">
+                    <p style="color:#8a8a8a;font-size:.95rem;margin:0">No products found in this category.</p>
+                </div>
+            <?php else : ?>
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.25rem">
+                    <?php foreach ($content as $row) : ?>
+                    <a href="<?= base_url("shop/detail/{$row->product_slug}") ?>" style="background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.04);transition:.35s;text-decoration:none;color:#1a1a1a;border:1px solid #f0f0f0"
+                       onmouseover="this.style.boxShadow='0 12px 36px rgba(0,0,0,.08)';this.style.transform='translateY(-3px)'"
+                       onmouseout="this.style.boxShadow='0 4px 16px rgba(0,0,0,.04)';this.style.transform='translateY(0)'">
+                        <div style="aspect-ratio:1/1;overflow:hidden;background:#f5f5f5">
+                            <img src="<?= $row->image ? base_url("images/product/{$row->image}") : base_url("images/product/default.jpg") ?>" alt="<?= e($row->product_title) ?>" style="width:100%;height:100%;object-fit:cover;transition:.5s"
+                                 onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
+                        </div>
+                        <div style="padding:.85rem 1rem 1.15rem">
+                            <div style="font-size:.875rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><?= e($row->product_title) ?></div>
+                            <div style="color:#d4a853;font-weight:700;font-size:.9rem;margin-top:.2rem">Rp <?= formatRupiah($row->price) ?></div>
+                        </div>
+                    </a>
+                    <?php endforeach ?>
+                </div>
+
+                <?php if (isset($pagination)) : ?>
+                <div style="display:flex;justify-content:center;margin-top:3rem">
+                    <div style="display:flex;gap:.35rem;flex-wrap:wrap"><?= $pagination ?></div>
+                </div>
+                <?php endif ?>
+            <?php endif ?>
+        </main>
     </div>
 </div>
 
-
-<!-- <form method="get" action="<?= base_url('shop/index') ?>" id="sortForm">
-    <div class="form-group">
-        <label for="sort">Urutkan berdasarkan:</label>
-        <select class="form-control" id="sort" name="sort" onchange="submitForm()">
-            <option value="asc">Harga Terendah</option>
-            <option value="desc">Harga Tertinggi</option>
-        </select>
-    </div>
-
-    <input type="hidden" name="category" value="<?= isset($category) ? $category : '' ?>">
-</form>
-
-
-<script>
-    function submitForm() {
-        document.getElementById('sortForm').submit();
-    }
-</script> -->
+<style>
+@media (max-width: 768px) {
+    .shop-layout { grid-template-columns: 1fr !important; }
+    .shop-layout aside { display: none !important; }
+    .mobile-categories { display: flex !important; }
+}
+</style>

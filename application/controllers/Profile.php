@@ -9,13 +9,8 @@ class Profile extends MY_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$is_login	= $this->session->userdata('is_login');
-		$this->id	= $this->session->userdata('id');
-
-		if (! $is_login) {
-			redirect(base_url());
-			return;
-		}
+		$this->id = $this->session->userdata('id');
+		$this->_requireLogin();
 	}
 
     public function index()

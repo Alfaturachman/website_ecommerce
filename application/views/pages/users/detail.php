@@ -1,195 +1,167 @@
-<style>
-    .card {
-        box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
-    }
-</style>
-<div class="container my-5">
-    <!-- <?php $this->load->view('layouts/_alerts') ?> -->
+<div style="max-width:1280px;margin:0 auto;padding:2.5rem 2rem">
     <?php if ($content) : ?>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="<?= base_url() ?>"><strong>Home</strong></a>
-                </li>
-                <li class="breadcrumb-item"><a href="<?= base_url("#new-product") ?>">Shop</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><?= $content->product_title ?></li>
-            </ol>
-        </nav>
-        <div class="row">
-            <div class="col-lg-4 col-sm-12 my-2">
-                <img src="<?= $content->image ? base_url("images/product/$content->image") : base_url("images/product/default.jpg") ?>" alt="" class="img-fluid">
+
+    <nav style="display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:#aaa;margin-bottom:2.5rem;letter-spacing:.02em">
+        <a href="<?= base_url() ?>" style="color:#aaa;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#1a1a1a'" onmouseout="this.style.color='#aaa'">Home</a>
+        <span style="color:#ddd">/</span>
+        <a href="<?= base_url('shop') ?>" style="color:#aaa;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#1a1a1a'" onmouseout="this.style.color='#aaa'">Shop</a>
+        <span style="color:#ddd">/</span>
+        <span style="color:#555;font-weight:500"><?= e($content->product_title) ?></span>
+    </nav>
+
+    <div class="shop-detail-grid" style="display:grid;grid-template-columns:1.15fr .85fr;gap:4rem;align-items:start">
+
+        <!-- Left: Image -->
+        <div style="position:sticky;top:6rem">
+            <div style="background:#f4f4f4;border-radius:16px;overflow:hidden;position:relative">
+                <img src="<?= $content->image ? base_url("images/product/$content->image") : base_url("images/product/default.jpg") ?>" alt="<?= e($content->product_title) ?>" style="width:100%;height:auto;display:block;transition:transform .8s cubic-bezier(.25,.46,.45,.94);will-change:transform"
+                     onmouseover="this.style.transform='scale(1.045)'" onmouseout="this.style.transform='scale(1)'">
             </div>
-            <div class="col-lg-8 col-sm-12">
-                <div class="row">
-                    <div class="col">
-                        <h3 class="title-product font-weight-bold"><?= $content->product_title ?></h3>
-                        <h4 class="price-product">
-                            <strong class="font-weight-bold">Rp <?= number_format($content->price, 0, ',', '.') ?></strong>
-                        </h4>
-                        <h5 class="price-product mt-3">
-                            <?= $content->is_available == 1 ? '<span class="badge badge-pill badge-success">Stok Tersedia</span>' : '<span class="badge badge-pill badge-danger">Kosong</span>' ?>
-                        </h5>
-                        <div class="mt-3">
-                            <form action="<?= base_url('cart/add') ?>" method="POST" id="addToCartForm">
-                                <input type="hidden" name="id_product" value="<?= $content->id ?>">
-                                <input type="hidden" name="quantity" size="5" class="form-control" value="<?= $content->is_available == 1 ? '1' : '0' ?>">
-                                <!-- <div class="row">
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="">Catatan untuk Produk</label>
-                                        <?php $readonly = $content->is_available == 0 ? 'readonly' : ''; ?>
-                                        <input type="text" name="message" class="form-control"
-                                            placeholder="Contoh: Tambahkan Bubble Warp" <?= $readonly ?>>
-                                    </div>
-                                </div>
-                            </div> -->
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="card shadow-lg mt-2">
-                                            <div class="card-body">
-                                                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                                                    <li class="nav-item product-info">
-                                                        <h5 class="m-0" style="font-weight: bold;">Detail
-                                                            <?= $content->product_title ?>
-                                                        </h5>
-                                                    </li>
-                                                </ul>
-                                                <div class="tab-content" id="pills-tabContent">
-                                                    <div class="tab-pane fade show active" id="pills-detail" role="tabpanel" aria-labelledby="pills-detail-tab">
-                                                        <p><strong class="font-weight-bold">Jumlah :
-                                                            </strong><?= $content->is_available == 1 ? '1' : '0' ?> buah</p>
-                                                        <p><strong class="font-weight-bold">Kategori :
-                                                            </strong><?= $content->category_title ?></p>
-                                                        <p><strong class="font-weight-bold">Ukuran :
-                                                            </strong><?= $content->size ?></p>
-                                                        <p><strong class="font-weight-bold">Warna :
-                                                            </strong><?= $content->color ?></p>
-                                                        <p style="text-align: justify;">
-                                                            <strong class="font-weight-bold">Deskripsi : </strong><br>
-                                                            <?= $content->description ?>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <?php if ($content->is_available == 1) : ?>
-                                    <button type="submit" class="btn btn-md btn-block btn-cart mt-4">
-                                        <i class="fas fa-shopping-cart"></i>
-                                        <strong>Tambahkan Ke Keranjang</strong>
-                                    </button>
-                                <?php else : ?>
-                                    <button type="button" class="btn btn-md btn-block btn-cart mt-4" disabled>
-                                        <i class="fas fa-shopping-cart"></i>
-                                        Tambahkan Ke Keranjang
-                                    </button>
-                                <?php endif; ?>
-                            </form>
-                            <div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="cartModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="cartModalLabel">Produk Sudah Ada di Keranjang</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            Produk ini sudah ditambahkan ke keranjang belanja Anda.
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                                            <!-- Mungkin Anda ingin menambahkan tombol untuk pergi ke halaman keranjang -->
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        </div>
+
+        <!-- Right: Info -->
+        <div style="padding-top:.25rem">
+            <div style="font-size:.7rem;font-weight:500;color:#b0b0b0;letter-spacing:.12em;margin-bottom:.75rem;text-transform:uppercase"><?= e($content->category_title) ?></div>
+            <h1 style="font-size:1.75rem;font-weight:650;color:#1a1a1a;margin:0;letter-spacing:-.02em;line-height:1.2"><?= e($content->product_title) ?></h1>
+
+            <div style="margin-top:1.25rem;font-size:1.35rem;font-weight:550;color:#1a1a1a;letter-spacing:-.01em">Rp <?= formatRupiah($content->price) ?></div>
+
+            <div style="margin-top:.75rem">
+                <?php if ($content->is_available == 1) : ?>
+                    <span style="font-size:.72rem;font-weight:500;color:#8a8a8a">In stock</span>
+                <?php else : ?>
+                    <span style="font-size:.72rem;font-weight:500;color:#c0c0c0">Currently unavailable</span>
+                <?php endif ?>
+            </div>
+
+            <div style="height:1px;background:#eaeaea;margin:1.75rem 0"></div>
+
+            <!-- Details inline -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem 2rem">
+                <div>
+                    <div style="font-size:.68rem;font-weight:500;color:#b0b0b0;margin-bottom:.25rem">Size</div>
+                    <div style="font-size:.9rem;font-weight:500;color:#1a1a1a"><?= e($content->size) ?></div>
+                </div>
+                <div>
+                    <div style="font-size:.68rem;font-weight:500;color:#b0b0b0;margin-bottom:.25rem">Color</div>
+                    <div style="font-size:.9rem;font-weight:500;color:#1a1a1a"><?= e($content->color) ?></div>
+                </div>
+                <div>
+                    <div style="font-size:.68rem;font-weight:500;color:#b0b0b0;margin-bottom:.25rem">Category</div>
+                    <div style="font-size:.9rem;font-weight:500;color:#1a1a1a"><?= e($content->category_title) ?></div>
+                </div>
+                <div>
+                    <div style="font-size:.68rem;font-weight:500;color:#b0b0b0;margin-bottom:.25rem">Quantity</div>
+                    <div style="font-size:.9rem;font-weight:500;color:#1a1a1a"><?= $content->is_available == 1 ? '1' : '0' ?> available</div>
                 </div>
             </div>
-            <script>
-                document.getElementById('addToCartForm').addEventListener('submit', function(event) {
-                    event.preventDefault(); // Hindari pengiriman formulir secara otomatis
 
-                    // Gunakan AJAX untuk memanggil endpoint
-                    $.ajax({
-                        type: 'GET',
-                        url: '<?= base_url("cart/isProductInCart/") ?>' + <?= $content->id ?>,
-                        success: function(response) {
-                            var result = JSON.parse(response);
-                            var productAlreadyInCart = result.isProductInCart;
+            <div style="height:1px;background:#eaeaea;margin:1.75rem 0"></div>
 
-                            if (productAlreadyInCart) {
-                                $('#cartModal').modal('show');
-                            } else {
-                                // Produk belum ada di keranjang, lanjutkan pengiriman formulir
-                                document.getElementById('addToCartForm').submit();
-                            }
-                        },
-                        error: function(error) {
-                            console.log('Error:', error);
-                        }
-                    });
-                });
-            </script>
+            <!-- Description -->
+            <div>
+                <div style="font-size:.68rem;font-weight:500;color:#b0b0b0;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.65rem">Description</div>
+                <p style="font-size:.85rem;color:#666;line-height:1.8;margin:0;max-width:45ch"><?= e($content->description) ?></p>
+            </div>
+
+            <div style="height:1px;background:#eaeaea;margin:1.75rem 0"></div>
+
+            <!-- CTA -->
+            <form action="<?= base_url('cart/add') ?>" method="POST" id="addToCartForm">
+                <input type="hidden" name="id_product" value="<?= e($content->id) ?>">
+                <input type="hidden" name="quantity" value="<?= $content->is_available == 1 ? '1' : '0' ?>">
+
+                <?php if ($content->is_available == 1) : ?>
+                    <button type="submit" style="width:100%;height:50px;border:none;border-radius:10px;background:#1a1a1a;color:#fff;font-size:.82rem;font-weight:550;letter-spacing:.02em;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center"
+                            onmouseover="this.style.background='#333'" onmouseout="this.style.background='#1a1a1a'">
+                        Add to Cart
+                    </button>
+                <?php else : ?>
+                    <button type="button" style="width:100%;height:50px;border:1px solid #eaeaea;background:transparent;color:#c0c0c0;font-size:.82rem;font-weight:500;cursor:not-allowed;display:flex;align-items:center;justify-content:center" disabled>
+                        Unavailable
+                    </button>
+                <?php endif; ?>
+            </form>
         </div>
-</div>
-<?php else : ?>
-    <script>
-        var redirectUrl = '<?= base_url('cart') ?>';
-        window.location.href = redirectUrl;
-    </script>
-<?php endif; ?>
-<script>
-    document.getElementById('addToCartForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Hindari pengiriman formulir secara otomatis
+    </div>
 
-        // Pemeriksaan apakah pengguna sudah login
-        <?php if (!$this->session->userdata('id')) : ?>
-            // Jika belum login, tampilkan modal login
-            $('#loginModal').modal('show');
-        <?php else : ?>
-            // Jika sudah login, gunakan AJAX untuk memanggil endpoint
-            $.ajax({
-                type: 'GET',
-                url: '<?= base_url("cart/isProductInCart/") ?>' + <?= $content->id ?>,
-                success: function(response) {
-                    var result = JSON.parse(response);
-                    var productAlreadyInCart = result.isProductInCart;
-
-                    if (productAlreadyInCart) {
-                        $('#cartModal').modal('show');
-                    } else {
-                        // Produk belum ada di keranjang, lanjutkan pengiriman formulir
-                        document.getElementById('addToCartForm').submit();
-                    }
-                },
-                error: function(error) {
-                    console.log('Error:', error);
-                }
-            });
-        <?php endif; ?>
-    });
-</script>
-
-<!-- Modal Login -->
-<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="loginModalLabel">Login Required</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Anda harus login untuk menambahkan produk ke keranjang.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <a href="<?= base_url("login") ?>" class="btn btn-primary">Login</a>
+    <!-- Modals -->
+    <div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:360px">
+            <div class="modal-content" style="border:none;border-radius:16px;box-shadow:0 24px 64px rgba(0,0,0,.12);padding:1.5rem">
+                <div class="modal-header" style="border:none;padding:0 0 .75rem">
+                    <h5 class="modal-title" style="font-size:.95rem;font-weight:600;color:#1a1a1a">Already in cart</h5>
+                    <button type="button" class="close" data-dismiss="modal" style="font-size:1.25rem;color:#999;border:none;background:none;cursor:pointer">&times;</button>
+                </div>
+                <div class="modal-body" style="padding:0 0 1.25rem">
+                    <p style="font-size:.82rem;color:#888;margin:0;line-height:1.6">This item is already in your shopping cart.</p>
+                </div>
+                <div class="modal-footer" style="border:none;padding:0;gap:.5rem;display:flex">
+                    <button type="button" data-dismiss="modal" style="flex:1;height:42px;border:1px solid #eaeaea;border-radius:8px;background:transparent;color:#1a1a1a;font-size:.78rem;font-weight:500;cursor:pointer;transition:background .2s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Continue</button>
+                    <a href="<?= base_url('cart') ?>" style="flex:1;height:42px;border:none;border-radius:8px;background:#1a1a1a;color:#fff;font-size:.78rem;font-weight:500;text-decoration:none;display:flex;align-items:center;justify-content:center;transition:background .2s" onmouseover="this.style.background='#333'" onmouseout="this.style.background='#1a1a1a'">View Cart</a>
+                </div>
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:360px">
+            <div class="modal-content" style="border:none;border-radius:16px;box-shadow:0 24px 64px rgba(0,0,0,.12);padding:1.5rem">
+                <div class="modal-header" style="border:none;padding:0 0 .75rem">
+                    <h5 class="modal-title" style="font-size:.95rem;font-weight:600;color:#1a1a1a">Sign in required</h5>
+                    <button type="button" class="close" data-dismiss="modal" style="font-size:1.25rem;color:#999;border:none;background:none;cursor:pointer">&times;</button>
+                </div>
+                <div class="modal-body" style="padding:0 0 1.25rem">
+                    <p style="font-size:.82rem;color:#888;margin:0;line-height:1.6">Please sign in to add items to your cart.</p>
+                </div>
+                <div class="modal-footer" style="border:none;padding:0;gap:.5rem;display:flex">
+                    <button type="button" data-dismiss="modal" style="flex:1;height:42px;border:1px solid #eaeaea;border-radius:8px;background:transparent;color:#1a1a1a;font-size:.78rem;font-weight:500;cursor:pointer;transition:background .2s" onmouseover="this.style.background='#f5f5f5'" onmouseout="this.style.background='transparent'">Cancel</button>
+                    <a href="<?= base_url("login") ?>" style="flex:1;height:42px;border:none;border-radius:8px;background:#1a1a1a;color:#fff;font-size:.78rem;font-weight:500;text-decoration:none;display:flex;align-items:center;justify-content:center;transition:background .2s" onmouseover="this.style.background='#333'" onmouseout="this.style.background='#1a1a1a'">Sign In</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <?php else : ?>
+        <script>window.location.href = '<?= base_url('cart') ?>';</script>
+    <?php endif; ?>
 </div>
+
+<style>
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
+.shop-detail-grid { animation:fadeIn .5s ease-out }
+.shop-detail-grid > div:first-child img { aspect-ratio:1/1;object-fit:cover }
+@media (max-width: 768px) {
+    .shop-detail-grid { grid-template-columns:1fr !important; gap:1.5rem !important }
+    .shop-detail-grid > div:first-child { position:static !important }
+    .shop-detail-grid > div:first-child img { aspect-ratio:1/1;object-fit:cover }
+    .shop-detail-grid > div:last-child { padding-top:0 !important }
+    .shop-detail-grid > div:last-child h1 { font-size:1.35rem !important }
+}
+</style>
+
+<script>
+document.getElementById('addToCartForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    <?php if (!$this->session->userdata('id')) : ?>
+        $('#loginModal').modal('show');
+    <?php else : ?>
+        $.ajax({
+            type: 'GET',
+            url: '<?= base_url("cart/isProductInCart/") ?>' + <?= $content->id ?>,
+            success: function(response) {
+                var result = JSON.parse(response);
+                if (result.isProductInCart) {
+                    $('#cartModal').modal('show');
+                } else {
+                    document.getElementById('addToCartForm').submit();
+                }
+            },
+            error: function(error) {
+                console.log('Error:', error);
+            }
+        });
+    <?php endif; ?>
+});
+</script>

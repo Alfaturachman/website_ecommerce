@@ -49,9 +49,9 @@
                     <?php $no = 0;
                     foreach ($content as $row) : $no++ ?>
                     <tr>
-                        <td><strong>#<?= $row->invoice ?></strong></td>
-                        <td><?= str_replace('-', '/', date("d-m-Y", strtotime($row->date))) ?></td>
-                        <td>Rp<?= number_format($row->total + $row->cost_courier, 0, ',', '.') ?>,-</td>
+                        <td><strong>#<?= e($row->invoice) ?></strong></td>
+                        <td><?= date('d/m/Y', strtotime($row->date)) ?></td>
+                        <td>Rp<?= formatRupiah($row->total + $row->cost_courier) ?></td>
                         <td>
                             <?php $this->load->view('layouts/_status', ['status' => $row->status]);  ?>
                         </td>

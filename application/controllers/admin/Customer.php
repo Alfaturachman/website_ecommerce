@@ -11,10 +11,7 @@ class Customer extends MY_Controller
         parent::__construct();
         $this->load->library('form_validation');
         $this->load->model('Customer_model', 'user');
-
-        if (!$this->session->userdata('username')) {
-            redirect('admin');
-        }
+        $this->_requireAdmin();
     }
 
 
@@ -24,7 +21,6 @@ class Customer extends MY_Controller
         $data['content']    = $this->user->select(
             ['user.id', 'user.name AS user_name', 'user.email AS user_email', 'user.password', 'user.image']
         )
-            // ->paginate($page)
             ->get();
         $data['total_rows'] = $this->user->count();
         $data['pagination'] = $this->user->makePagination(
@@ -69,11 +65,6 @@ class Customer extends MY_Controller
 
     public function create()
     {
-        if (!$this->input->post('password')) {
-            // Handle the case where the password is not set
-            // ...
-        }
-
         $input = (object) $this->input->post(null, true);
 
         if (!$this->user->validate()) {

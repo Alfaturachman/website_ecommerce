@@ -63,14 +63,14 @@
                     ?>
                     <tr>
                         <td><?= $no ?></td>
-                        <td>#<?= $order->invoice ?></td>
-                        <td><?= $order->date ?></td>
-                        <td><?= $order->name ?></td>
-                        <td>Rp<?= number_format($order->total_subtotal, 0, ',', '.') ?></td>
-                        <td><?= $order->diskon_persen ?>%</td>
-                        <td>Rp<?= number_format($order->diskon, 0, ',', '.') ?></td>
-                        <td>Rp<?= number_format($order->cost_courier, 0, ',', '.') ?></td>
-                        <td>Rp<?= number_format($order->total, 0, ',', '.') ?></td>
+                        <td>#<?= e($order->invoice) ?></td>
+                        <td><?= e($order->date) ?></td>
+                        <td><?= e($order->name) ?></td>
+                        <td>Rp<?= formatRupiah($order->total_subtotal) ?></td>
+                        <td><?= e($order->diskon_persen) ?>%</td>
+                        <td>Rp<?= formatRupiah($order->diskon) ?></td>
+                        <td>Rp<?= formatRupiah($order->cost_courier) ?></td>
+                        <td>Rp<?= formatRupiah($order->total) ?></td>
                     </tr>
                     <?php
                         endif;

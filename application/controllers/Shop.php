@@ -19,15 +19,10 @@ class Shop extends MY_Controller
 			->join('category')
 			->where('product.is_available', 1)
 			->where('delete', 1)
-			->orderBy('product.price', 'DESC') // Use the orderBy method to sort by price
-			// ->paginate($page)
+			->orderBy('product.price', 'DESC')
 			->get();
 		$data['total_rows'] = $this->shop->where('product.is_available', 1)->where('delete', 1)->count();
-		// $data['pagination'] = $this->shop->makePagination(
-		// 	base_url('shop/index'),
-		// 	3,
-		// 	$data['total_rows']
-		// );
+		$data['gender']     = null;
 		$data['page']       = 'pages/users/shop';
 
 		$this->view($data);
@@ -37,14 +32,23 @@ class Shop extends MY_Controller
 	public function men($page = null)
 	{
 		$data['title']      = 'Produk Pria';
-		$data['content']    = $this->shop->paginate($page)->where('type', 'L')->where('delete', 1)->get();
+		$data['content']    = $this->shop->select(
+			[
+				'product.id', 'product.title AS product_title',
+				'product.image', 'product.price', 'product.slug As product_slug',
+				'category.title AS category_title', 'category.slug AS category_slug'
+			]
+		)
+			->join('category')
+			->paginate($page)->where('type', 'L')->where('delete', 1)->get();
 		$data['total_rows'] = $this->shop->where('type', 'L')->where('delete', 1)->count();
 		$data['pagination'] = $this->shop->makePagination(
 			base_url('shop/men'),
 			3,
 			$data['total_rows']
 		);
-		$data['page']       = 'pages/users/men';
+		$data['gender']     = 'L';
+		$data['page']       = 'pages/users/shop';
 
 		$this->view($data);
 	}
@@ -52,14 +56,47 @@ class Shop extends MY_Controller
 	public function women($page = null)
 	{
 		$data['title']      = 'Produk Wanita';
-		$data['content']    = $this->shop->paginate($page)->where('type', 'W')->where('delete', 1)->get();
-		$data['total_rows'] = $this->shop->where('type', 'w')->where('delete', 1)->count();
+		$data['content']    = $this->shop->select(
+			[
+				'product.id', 'product.title AS product_title',
+				'product.image', 'product.price', 'product.slug As product_slug',
+				'category.title AS category_title', 'category.slug AS category_slug'
+			]
+		)
+			->join('category')
+			->paginate($page)->where('type', 'W')->where('delete', 1)->get();
+		$data['total_rows'] = $this->shop->where('type', 'W')->where('delete', 1)->count();
 		$data['pagination'] = $this->shop->makePagination(
-			base_url('shop/men'),
+			base_url('shop/women'),
 			3,
 			$data['total_rows']
 		);
-		$data['page']       = 'pages/users/women';
+		$data['gender']     = 'W';
+		$data['page']       = 'pages/users/shop';
+
+		$this->view($data);
+	}
+
+	public function unisex($page = null)
+	{
+		$data['title']      = 'Produk Unisex';
+		$data['content']    = $this->shop->select(
+			[
+				'product.id', 'product.title AS product_title',
+				'product.image', 'product.price', 'product.slug As product_slug',
+				'category.title AS category_title', 'category.slug AS category_slug'
+			]
+		)
+			->join('category')
+			->paginate($page)->where('type', 'U')->where('delete', 1)->get();
+		$data['total_rows'] = $this->shop->where('type', 'U')->where('delete', 1)->count();
+		$data['pagination'] = $this->shop->makePagination(
+			base_url('shop/unisex'),
+			3,
+			$data['total_rows']
+		);
+		$data['gender']     = 'U';
+		$data['page']       = 'pages/users/shop';
 
 		$this->view($data);
 	}
@@ -94,6 +131,45 @@ class Shop extends MY_Controller
 			$data['total_rows']
 		);
 		$data['category']   = ucwords(str_replace('-', ' ', $category));
+		$data['gender']     = null;
+		$data['page']       = 'pages/users/shop';
+
+		$this->view($data);
+	}
+
+
+	public function gender_category($gender, $category, $page = null)
+	{
+		$typeMap = ['men' => 'L', 'women' => 'W', 'unisex' => 'U'];
+		$type    = $typeMap[$gender] ?? null;
+
+		$sort = $this->input->get('sort');
+		$sortOrder = ($sort == 'desc') ? 'desc' : 'asc';
+
+		$data['title']      = genderLabel($type) . ' ' . ucwords(str_replace('-', ' ', $category));
+		$data['content']    = $this->shop->select(
+			[
+				'product.id', 'product.title AS product_title',
+				'product.image', 'product.price', 'product.slug As product_slug',
+				'category.title AS category_title', 'category.slug AS category_slug'
+			]
+		)
+			->join('category')
+			->where('product.is_available', 1)
+			->where('delete', 1)
+			->where('product.type', $type)
+			->where('category.slug', $category)
+			->orderBy('product.price', $sortOrder)
+			->paginate($page)
+			->get();
+		$data['total_rows'] = $this->shop->where('product.is_available', 1)->where('delete', 1)->where('product.type', $type)->where('category.slug', $category)->join('category')->count();
+		$data['pagination'] = $this->shop->makePagination(
+			base_url("shop/$gender/category/$category"),
+			4,
+			$data['total_rows']
+		);
+		$data['category']   = ucwords(str_replace('-', ' ', $category));
+		$data['gender']     = $type;
 		$data['page']       = 'pages/users/shop';
 
 		$this->view($data);
@@ -133,6 +209,7 @@ class Shop extends MY_Controller
 			3,
 			$data['total_rows']
 		);
+		$data['gender']		= null;
 		$data['page']		= 'pages/users/shop';
 
 		$this->view($data);

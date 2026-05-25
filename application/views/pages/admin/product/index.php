@@ -47,15 +47,15 @@
                             <td><?= $no ?></td>
                             <td>
                                 <p>
-                                    <?= $row->product_title ?>
+                                    <?= e($row->product_title) ?>
                                     <img src="<?= $row->image ? base_url("images/product/$row->image") : base_url("images/product/default.jpg") ?>" alt="" height="100" class="img-responsive">
                                 </p>
                             </td>
                             <td>
                                 <span class="badge badge-primary"><i class="fas fa-tags"></i>
-                                    <?= $row->category_title ?></span>
+                                    <?= e($row->category_title) ?></span>
                             </td>
-                            <td>Rp<?= number_format($row->price, 0, ',', '.') ?></td>
+                            <td>Rp<?= formatRupiah($row->price) ?></td>
                             <td><?= $row->is_available ? '<span class="badge badge-success">Tersedia</span>' : '<span class="badge badge-danger">Kosong</span>' ?>
                             </td>
                             <td>

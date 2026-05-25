@@ -10,28 +10,19 @@ class Myorder extends MY_Controller
     public function __construct()
     {
         parent::__construct();
-        $is_login = $this->session->userdata('is_login');
         $this->id = $this->session->userdata('id');
-
-        if (!$is_login) {
-            redirect(base_url(), 'refresh');
-            return;
-        }
+        $this->_requireLogin();
     }
 
     public function index($page = null)
     {
-        $per_page = 5; // Jumlah data yang ingin ditampilkan per halaman
-
         $data['title']      = "Daftar Order";
         $data['content']    = $this->myorder
             ->where('id_user', $this->id)
             ->orderBy('invoice', 'DESC')
-            // ->paginate($page, $per_page)
             ->get();
 
         $data['total_rows'] = $this->myorder->where('id_user', $this->id)->count();
-        // $data['pagination'] = $this->myorder->makePagination(base_url('myorder'), $per_page, $data['total_rows']);
         $data['page']       = 'pages/users/orders';
 
         $this->view($data);

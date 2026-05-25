@@ -1,110 +1,105 @@
-<style>
-body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem 1rem">
+    <div style="width:100%;max-width:520px">
+        <div style="text-align:center;margin-bottom:2rem">
+            <a href="<?= base_url() ?>" style="font-size:1.5rem;font-weight:800;color:#1a1a1a;text-decoration:none;letter-spacing:-.5px">NOMADENSTUFF</a>
+            <p style="color:#8a8a8a;font-size:.9rem;margin-top:.35rem">Create your account and start thrifting</p>
+        </div>
 
-.full-height {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-</style>
-<style>
-/* Tambahkan gaya CSS untuk ikon tercoret */
-.crossed {
-    text-decoration: line-through;
-}
-</style>
+        <div style="background:#fff;border-radius:24px;padding:2.25rem;box-shadow:0 8px 30px rgba(0,0,0,.06);border:1px solid #f0f0f0">
+            <?php if ($this->session->flashdata('error')) : ?>
+                <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:12px;padding:.75rem 1rem;margin-bottom:1.25rem;font-size:.85rem;color:#991b1b"><?= e($this->session->flashdata('error')) ?></div>
+            <?php endif ?>
 
-<div class="full-height">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6 col-sm-12">
-                <div class="card my-5">
-                    <div class="card-header d-flex justify-content-center">
-                        <h5 class="m-0"><strong>Form Register</strong></h5>
+            <form action="register" method="POST">
+                <div class="row">
+                    <div class="col-md-6" style="margin-bottom:.75rem">
+                        <label style="font-size:.85rem;font-weight:600;color:#1a1a1a;margin-bottom:.4rem;display:block">Name</label>
+                        <input type="text" name="name" id="name" placeholder="Your name" required
+                            style="width:100%;padding:.7rem 1rem;border:1.5px solid #e0e0e0;border-radius:100px;font-size:.9rem;outline:none;transition:.3s;background:#fafafa;box-sizing:border-box"
+                            onfocus="this.style.borderColor='#1a1a1a';this.style.background='#fff'"
+                            onblur="this.style.borderColor='#e0e0e0';this.style.background='#fafafa'">
+                        <small style="color:#dc2626;font-size:.78rem;display:block;margin-top:.25rem"><?= form_error('name') ?></small>
                     </div>
-                    <div class="card-body">
-                        <!-- <?php $this->load->view("layouts/_alerts") ?> -->
-                        <form action="register" method="POST">
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label for="name">Nama</label>
-                                        <input type="text" name="name" id="name" class="form-control"
-                                            placeholder="Masukkan nama Anda" required>
-                                        <div class="error"><?= form_error('name') ?></div>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="form-group">
-                                        <label for="email">Email</label>
-                                        <input type="email" name="email" id="email" class="form-control"
-                                            placeholder="Masukkan email Anda" value="" required>
-                                        <div class="error"><?= form_error('email') ?></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="phone">Phone</label>
-                                <input type="text" name="phone" id="phone" class="form-control"
-                                    placeholder="Masukkan nomor telepon Anda" required>
-                                <div class="error"><?= form_error('phone') ?></div>
-                            </div>
-                            <div class="form-group">
-                                <label for="address">Address</label>
-                                <textarea name="address" id="address" class="form-control" style="resize:none;"
-                                    placeholder="Masukkan alamat Anda" required></textarea>
-                                <div class="error"><?= form_error('address') ?></div>
-                            </div>
-                            <div class="form-group">
-                                <label for="password">Password</label>
-                                <div class="input-group">
-                                    <input type="password" name="password" id="password" class="form-control"
-                                        placeholder="Masukkan password minimal 6 karakter" required>
-                                    <div class="input-group-append">
-                                        <span class="input-group-text" id="togglePassword"
-                                            onclick="togglePasswordVisibility('password')">
-                                            <i class="fa fa-eye" aria-hidden="true"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="error"><?= form_error('password') ?></div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="password_confirmation">Konfirmasi Password</label>
-                                <div class="input-group">
-                                    <input type="password" name="password_confirmation" id="password_confirmation"
-                                        class="form-control" placeholder="Masukkan password yang sama" required>
-                                    <div class="input-group-append">
-                                        <span class="input-group-text" id="togglePasswordConfirmation"
-                                            onclick="togglePasswordVisibility('password_confirmation')">
-                                            <i class="fa fa-eye" aria-hidden="true"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="error"><?= form_error('password_confirmation') ?></div>
-                            </div>
-
-                            <script>
-                            function togglePasswordVisibility(inputId) {
-                                const passwordInput = document.getElementById(inputId);
-                                const type = passwordInput.type === 'password' ? 'text' : 'password';
-                                passwordInput.type = type;
-                            }
-                            </script>
-
-                            <button type="submit" class="btn btn-dark btn-block mt-4">Register</button>
-                        </form>
-                        <p class="mt-3 text-center">Sudah memiliki akun? <a href="<?= base_url("login") ?>">Login
-                                sekarang</a></p>
+                    <div class="col-md-6" style="margin-bottom:.75rem">
+                        <label style="font-size:.85rem;font-weight:600;color:#1a1a1a;margin-bottom:.4rem;display:block">Email</label>
+                        <input type="email" name="email" id="email" placeholder="your@email.com" required
+                            style="width:100%;padding:.7rem 1rem;border:1.5px solid #e0e0e0;border-radius:100px;font-size:.9rem;outline:none;transition:.3s;background:#fafafa;box-sizing:border-box"
+                            onfocus="this.style.borderColor='#1a1a1a';this.style.background='#fff'"
+                            onblur="this.style.borderColor='#e0e0e0';this.style.background='#fafafa'">
+                        <small style="color:#dc2626;font-size:.78rem;display:block;margin-top:.25rem"><?= form_error('email') ?></small>
                     </div>
                 </div>
+
+                <div style="margin-top:1rem">
+                    <label style="font-size:.85rem;font-weight:600;color:#1a1a1a;margin-bottom:.4rem;display:block">Phone</label>
+                    <input type="text" name="phone" id="phone" placeholder="08xxxxxxxxxx" required
+                        style="width:100%;padding:.7rem 1rem;border:1.5px solid #e0e0e0;border-radius:100px;font-size:.9rem;outline:none;transition:.3s;background:#fafafa;box-sizing:border-box"
+                        onfocus="this.style.borderColor='#1a1a1a';this.style.background='#fff'"
+                        onblur="this.style.borderColor='#e0e0e0';this.style.background='#fafafa'">
+                    <small style="color:#dc2626;font-size:.78rem;display:block;margin-top:.25rem"><?= form_error('phone') ?></small>
+                </div>
+
+                <div style="margin-top:1rem">
+                    <label style="font-size:.85rem;font-weight:600;color:#1a1a1a;margin-bottom:.4rem;display:block">Address</label>
+                    <textarea name="address" id="address" placeholder="Your shipping address" required
+                        style="width:100%;padding:.7rem 1rem;border:1.5px solid #e0e0e0;border-radius:16px;font-size:.9rem;outline:none;transition:.3s;background:#fafafa;resize:none;box-sizing:border-box;min-height:70px;font-family:inherit"
+                        onfocus="this.style.borderColor='#1a1a1a';this.style.background='#fff'"
+                        onblur="this.style.borderColor='#e0e0e0';this.style.background='#fafafa'"></textarea>
+                    <small style="color:#dc2626;font-size:.78rem;display:block;margin-top:.25rem"><?= form_error('address') ?></small>
+                </div>
+
+                <div class="row" style="margin-top:1rem">
+                    <div class="col-md-6" style="margin-bottom:.75rem">
+                        <label style="font-size:.85rem;font-weight:600;color:#1a1a1a;margin-bottom:.4rem;display:block">Password</label>
+                        <div style="display:flex;border:1.5px solid #e0e0e0;border-radius:100px;overflow:hidden;background:#fafafa;transition:.3s;width:100%"
+                             onfocusin="this.style.borderColor='#1a1a1a';this.style.background='#fff'"
+                             onfocusout="this.style.borderColor='#e0e0e0';this.style.background='#fafafa'">
+                            <input type="password" name="password" id="password" placeholder="Min. 6 chars" required
+                                style="flex:1;border:none;background:transparent;padding:.7rem 1rem;font-size:.9rem;outline:none;box-sizing:border-box;min-width:0">
+                            <span onclick="togglePw('password','eye1')" style="display:flex;align-items:center;padding:0 .75rem;cursor:pointer;color:#8a8a8a;user-select:none;flex-shrink:0">
+                                <i class="fa fa-eye" id="eye1"></i>
+                            </span>
+                        </div>
+                        <small style="color:#dc2626;font-size:.78rem;display:block;margin-top:.25rem"><?= form_error('password') ?></small>
+                    </div>
+                    <div class="col-md-6" style="margin-bottom:.75rem">
+                        <label style="font-size:.85rem;font-weight:600;color:#1a1a1a;margin-bottom:.4rem;display:block">Confirm Password</label>
+                        <div style="display:flex;border:1.5px solid #e0e0e0;border-radius:100px;overflow:hidden;background:#fafafa;transition:.3s;width:100%"
+                             onfocusin="this.style.borderColor='#1a1a1a';this.style.background='#fff'"
+                             onfocusout="this.style.borderColor='#e0e0e0';this.style.background='#fafafa'">
+                            <input type="password" name="password_confirmation" id="password_confirmation" placeholder="Repeat" required
+                                style="flex:1;border:none;background:transparent;padding:.7rem 1rem;font-size:.9rem;outline:none;box-sizing:border-box;min-width:0">
+                            <span onclick="togglePw('password_confirmation','eye2')" style="display:flex;align-items:center;padding:0 .75rem;cursor:pointer;color:#8a8a8a;user-select:none;flex-shrink:0">
+                                <i class="fa fa-eye" id="eye2"></i>
+                            </span>
+                        </div>
+                        <small style="color:#dc2626;font-size:.78rem;display:block;margin-top:.25rem"><?= form_error('password_confirmation') ?></small>
+                    </div>
+                </div>
+
+                <button type="submit" style="width:100%;padding:.75rem;border:none;border-radius:100px;background:#1a1a1a;color:#fff;font-weight:700;font-size:.9rem;cursor:pointer;transition:.3s;margin-top:1.5rem"
+                    onmouseover="this.style.background='#333'" onmouseout="this.style.background='#1a1a1a'">
+                    Create Account
+                </button>
+            </form>
+
+            <div style="text-align:center;margin-top:1.25rem;font-size:.85rem;color:#8a8a8a">
+                Already have an account? <a href="<?= base_url('login') ?>" style="color:#1a1a1a;font-weight:600;text-decoration:none;border-bottom:1.5px solid transparent;transition:.3s" onmouseover="this.style.borderColor='#1a1a1a'" onmouseout="this.style.borderColor='transparent'">Sign In</a>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+function togglePw(inputId, iconId) {
+    const pw = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+    if (pw.type === 'password') {
+        pw.type = 'text';
+        icon.className = 'fa fa-eye-slash';
+    } else {
+        pw.type = 'password';
+        icon.className = 'fa fa-eye';
+    }
+}
+</script>

@@ -9,14 +9,14 @@
             <div class="form-group">
                 <label for="">Judul Slider</label>
                 <input type="text" name="title" class="form-control" placeholder="Masukkan Judul Slider"
-                    value="<?= $input->title ?>" required>
+                    value="<?= e($input->title) ?>" required>
                 <?= form_error('title') ?>
             </div>
 
             <div class="form-group">
                 <label for="">Urutan Slider</label>
                 <input type="number" name="sequence" class="form-control" placeholder="Masukkan Urutan Slider"
-                    value="<?= $input->sequence ?>" required>
+                    value="<?= e($input->sequence) ?>" required>
                 <?= form_error('sequence') ?>
             </div>
 
@@ -27,7 +27,7 @@
             </div>
 
             <?php if ($this->session->flashdata('image_error')) : ?>
-            <small class="form-text text-danger"><?= $this->session->flashdata('image_error') ?></small>
+            <small class="form-text text-danger"><?= e($this->session->flashdata('image_error')) ?></small>
             <?php endif; ?>
 
             <?php if ($input->image) : ?>

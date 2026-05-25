@@ -10,13 +10,13 @@
 
             <div class="form-group">
                 <label for="name">Nama</label>
-                <input type="text" name="name" class="form-control" id="name" placeholder="Masukan Nama" value="<?= isset($input->name) ? $input->name : '' ?>" required>
+                <input type="text" name="name" class="form-control" id="name" placeholder="Masukan Nama" value="<?= isset($input->name) ? e($input->name) : '' ?>" required>
                 <small class="text-danger"><?= form_error('name') ?></small>
             </div>
 
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" name="email" class="form-control" id="email" placeholder="Masukan Email" value="<?= isset($input->email) ? $input->email : '' ?>" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                <input type="email" name="email" class="form-control" id="email" placeholder="Masukan Email" value="<?= isset($input->email) ? e($input->email) : '' ?>" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
                 <small class="text-danger"><?= form_error('email') ?></small>
             </div>
 

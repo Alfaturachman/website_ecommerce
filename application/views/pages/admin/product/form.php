@@ -105,7 +105,7 @@
             <br>
             <input type="file" name="image" id="imageInput" onchange="previewImage(this)">
             <?php if ($this->session->flashdata('image_error')) : ?>
-                <small class="form-text text-danger"><?= $this->session->flashdata('image_error') ?></small>
+                <small class="form-text text-danger"><?= e($this->session->flashdata('image_error')) ?></small>
             <?php endif ?>
             <?php if ($input->image) : ?>
                 <br><br>

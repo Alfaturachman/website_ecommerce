@@ -6,13 +6,13 @@
     <div class="card-body">
         <!-- <?php $this->load->view('layouts/_alerts') ?> -->
 
-        <p>Tanggal : <?= str_replace('-', '/', date("d-m-Y", strtotime($order->date))) ?></p>
-        <p>Nama : <?= $order->name ?></p>
-        <p>Telepon : <?= $order->phone ?></p>
-        <p>Alamat : <?= $order->address ?>, <?= $order->city ?>, <?= $order->province ?></p>
-        <p>Jasa Pengiriman : <?= $order->courier ?></p>
+        <p>Tanggal : <?= date('d/m/Y', strtotime($order->date)) ?></p>
+        <p>Nama : <?= e($order->name) ?></p>
+        <p>Telepon : <?= e($order->phone) ?></p>
+        <p>Alamat : <?= e($order->address) ?>, <?= e($order->city) ?>, <?= e($order->province) ?></p>
+        <p>Jasa Pengiriman : <?= e($order->courier) ?></p>
         <?php if ($order->waybill != "") : ?>
-            <p>No. Resi : <?= $order->waybill ?></p>
+            <p>No. Resi : <?= e($order->waybill) ?></p>
         <?php endif ?>
 
         <div class="table-responsive">
@@ -31,31 +31,31 @@
                         <tr>
                             <td>
                                 <p>
-                                    <?= $row->title ?><br>
+                                    <?= e($row->title) ?><br>
 
                                     <img src="<?= $row->image ? base_url("images/product/$row->image") : base_url("images/product/default.jpg") ?>" alt="" height="100" class="img-responsive"> <br>
                                 </p>
                             </td>
                             <td>Rp <?= number_format($row->price, 0, ',', '.') ?></td>
-                            <td><?= $row->quantity ?></td>
-                            <td><?= $row->message ?></td>
-                            <td>Rp <?= number_format($row->sub_total, 0, ',', '.') ?></td>
+                            <td><?= e($row->quantity) ?></td>
+                            <td><?= e($row->message) ?></td>
+                            <td>Rp <?= formatRupiah($row->sub_total) ?></td>
                         </tr>
                     <?php endforeach ?>
                 </tbody>
                 <tfoot style="background-color: #F6F6F6;">
                     <tr>
                         <td colspan="4">Total Belanja</td>
-                        <td>Rp <?= number_format(array_sum(array_column($order_detail, 'sub_total')), 0, ',', '.') ?>
+                        <td>Rp <?= formatRupiah(array_sum(array_column($order_detail, 'sub_total'))) ?>
                         </td>
                     </tr>
                     <tr>
                         <td colspan="4">Ongkos Kirim</td>
-                        <td>Rp <?= number_format($order->cost_courier, 0, ',', '.') ?></td>
+                        <td>Rp <?= formatRupiah($order->cost_courier) ?></td>
                     </tr>
                     <tr>
                         <td colspan="4"><strong>Total Bayar</strong></td>
-                        <td><strong>Rp <?= number_format($order->total + $order->cost_courier, 0, ',', '.') ?></strong>
+                        <td><strong>Rp <?= formatRupiah($order->total + $order->cost_courier) ?></strong>
                         </td>
                     </tr>
                 </tfoot>
@@ -112,10 +112,10 @@
             Bukti Transfer
         </div>
         <div class="card-body">
-            <p>No Rekening : <?= $order_confirm->account_number ?></p>
-            <p>Atas Nama : <?= $order_confirm->account_name ?></p>
-            <p>Nominal : <?= 'Rp ' . number_format($order_confirm->nominal, 0, ',', '.') ?></p>
-            <p>Note : <?= $order_confirm->note ?></p>
+            <p>No Rekening : <?= e($order_confirm->account_number) ?></p>
+            <p>Atas Nama : <?= e($order_confirm->account_name) ?></p>
+            <p>Nominal : Rp <?= formatRupiah($order_confirm->nominal) ?></p>
+            <p>Note : <?= e($order_confirm->note) ?></p>
 
             <div class="mt-3">
                 <img src="<?= base_url("/images/confirm/$order_confirm->image") ?>" alt="" height="200" class="img-responsive">

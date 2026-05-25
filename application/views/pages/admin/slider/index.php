@@ -47,7 +47,7 @@
                             <td>
                                 <img src="<?= $row->image ? base_url("images/slider/$row->image") : base_url("images/slider/default.jpg") ?>" alt="" height="100" class="img-responsive">
                             </td>
-                            <td><?= $row->title ?></td>
+                            <td><?= e($row->title) ?></td>
                             <td>
                                 <?= form_open(base_url("admin/slider/delete/$row->id"), ['method' => 'POST']) ?>
                                 <?= form_hidden('id', $row->id) ?>
