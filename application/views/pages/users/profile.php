@@ -1,58 +1,36 @@
-<div class="full-height">
-    <div class="container my-5">
-        <div class="row">
-            <div class="col-md-3 col-sm-12">
-                <?php $this->load->view('layouts/user/_sidebar') ?>
-            </div>
-            <div class="col-md-9 col-sm-12">
-                <div class="card">
-                    <div class="card-header py-3">
-                        <strong class="h5 font-weight-bold">Profil</strong>
+<div style="padding:3rem 2rem;max-width:var(--max-width);margin:0 auto;min-height:60vh">
+    <div class="profile-layout">
+        <aside class="profile-sidebar">
+            <?php $this->load->view('layouts/user/_sidebar') ?>
+        </aside>
+
+        <div>
+            <h1 style="font-size:1.25rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:1.5rem">Profile</h1>
+
+            <div class="profile-card">
+                <div class="flex gap-6 items-start" style="flex-wrap:wrap">
+                    <div style="width:100px;height:100px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--gray-100)">
+                        <img src="<?= $content->image ? base_url("/images/profile/$content->image") : base_url("/images/profile/avatar.png") ?>" alt="" style="width:100%;height:100%;object-fit:cover">
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-4 col-sm-12">
-                                <img src="<?= $content->image ? base_url("/images/profile/$content->image") : base_url("/images/profile/avatar.png") ?>" alt="" width="200" class="img-responsive">
-                            </div>
-                            <div class="col-md-8 col-sm-12">
-                                <fieldset class="m-0 p-0" disabled>
-                                    <div class="row">
-                                        <div class="col-lg-2 col-md-4 col-sm-12 d-flex align-items-center">
-                                            <label class="form-label">Nama</label>
-                                        </div>
-                                        <div class="col-lg-10 col-md-8 col-sm-12">
-                                            <input type="text" class="form-control" value="<?= e($content->name) ?>" />
-                                        </div>
-                                    </div>
-                                    <div class="row mt-4">
-                                        <div class="col-lg-2 col-md-4 col-sm-12 d-flex align-items-center">
-                                            <label class="form-label">Email</label>
-                                        </div>
-                                        <div class="col-lg-10 col-md-8 col-sm-12">
-                                            <input type="email" class="form-control" value="<?= e($content->email) ?>" />
-                                        </div>
-                                    </div>
-                                    <div class="row mt-4">
-                                        <div class="col-lg-2 col-md-4 col-sm-12 d-flex align-items-center">
-                                            <label class="form-label">Phone</label>
-                                        </div>
-                                        <div class="col-lg-10 col-md-8 col-sm-12">
-                                            <input type="text" class="form-control" value="<?= e($content->phone) ?>" />
-                                        </div>
-                                    </div>
-                                    <div class="row mt-4">
-                                        <div class="col-lg-2 col-md-4 col-sm-12 d-flex align-items-center">
-                                            <label class="form-label">Alamat</label>
-                                        </div>
-                                        <div class="col-lg-10 col-md-8 col-sm-12">
-                                            <input type="text" class="form-control" value="<?= e($content->address) ?>" />
-                                        </div>
-                                    </div>
-                                </fieldset>
-                                <div class="mt-4">
-                                    <a href="<?= base_url("/profile/update/$content->id") ?>" class="btn btn-dark btn-info px-3">Edit Profil</a>
-                                </div>
-                            </div>
+                    <div style="flex:1;min-width:200px">
+                        <div class="profile-field">
+                            <div class="profile-field__label">Name</div>
+                            <div class="profile-field__value"><?= e($content->name) ?></div>
+                        </div>
+                        <div class="profile-field">
+                            <div class="profile-field__label">Email</div>
+                            <div class="profile-field__value"><?= e($content->email) ?></div>
+                        </div>
+                        <div class="profile-field">
+                            <div class="profile-field__label">Phone</div>
+                            <div class="profile-field__value"><?= e($content->phone) ?></div>
+                        </div>
+                        <div class="profile-field">
+                            <div class="profile-field__label">Address</div>
+                            <div class="profile-field__value"><?= e($content->address) ?></div>
+                        </div>
+                        <div class="mt-4">
+                            <a href="<?= base_url("/profile/update/$content->id") ?>" class="btn btn--outline btn--sm">Edit Profile</a>
                         </div>
                     </div>
                 </div>

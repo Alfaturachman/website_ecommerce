@@ -1,58 +1,56 @@
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-9 col-sm-12">
-            <div class="card">
-                <div class="card-header bg-success text-white">
-                    <strong>Checkout Berhasil</strong>
-                </div>
-                <div class="card-body">
-                    <div class="my-5 text-center mb-3">
-                        <i class="text-success fas fa-check-circle fa-10x"></i>
-                    </div>
-                    <div class="text-center">
-                        <h6 class="mb-3">Nomor Invoice : <?= e($content->invoice) ?></h6>
-                        <h4 class="mb-3"><strong>Total Pembayaran :
-                                Rp<?= formatRupiah($content->total) ?></strong>
-                        </h4>
-                    </div>
-                    <p class="alert alert-success text-center font-weight-bold">
-                        Terima kasih! Pesanan Anda akan segera diproses.
-                    </p>
-                    <p style="text-align: justify;"><strong>Silahkan melakukan pembayaran sesuai total bayar di atas dan
-                            transfer pada salah satu rekening di bawah ini.</strong></p>
+<div style="padding:4rem 2rem;max-width:600px;margin:0 auto;text-align:center">
+    <div style="font-size:2.5rem;color:var(--gray-300);margin-bottom:1.5rem">
+        <i class="fas fa-check-circle"></i>
+    </div>
 
-                    <div class="bank-list my-4">
-                        <div>
-                            <img src="<?= base_url("assets/img/logo_bca.png") ?>" alt="BCA" class="img-fluid" width="75px" />
-                            <strong>Bank Central Asia (BCA) 5139742685</strong> a/n NOMADENSTUFF
-                        </div>
-                        <div>
-                            <img src="<?= base_url("assets/img/logo_bri.png") ?>" alt="BRI" class="img-fluid" width="75px" />
-                            <strong>Bank Rakyat Indonesia (BRI) 196214652186437</strong> a/n NOMADENSTUFF
-                        </div>
-                        <div>
-                            <img src="<?= base_url("assets/img/logo_bni.png") ?>" alt="BNI" class="img-fluid" width="75px" />
-                            <strong>Bank Negara Indonesia (BNI) 7982562143</strong> a/n NOMADENSTUFF
-                        </div>
-                        <div>
-                            <img src="<?= base_url("assets/img/logo_bsi.png") ?>" alt="BSI" class="img-fluid" width="75px" />
-                            <strong>Bank Syariah Indonesia (BSI) 652146347895214</strong> a/n NOMADENSTUFF
-                        </div>
-                        <div>
-                            <img src="<?= base_url("assets/img/logo_mandiri.png") ?>" alt="Mandiri" class="img-fluid" width="75px" />
-                            <strong>Bank Mandiri 456321789532164</strong> a/n NOMADENSTUFF
-                        </div>
-                    </div>
+    <h1 style="font-size:1.35rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem">Order Placed</h1>
+    <p style="color:var(--gray-500);font-size:0.9rem;margin-bottom:2rem">Thank you! Your order is being processed.</p>
 
-                    <p><strong>Jika sudah mentransfer, silahkan lakukan konfirmasi pembayaran dibawah ini.</strong></p>
+    <div style="border:1px solid var(--gray-100);padding:1.5rem;margin-bottom:2rem;text-align:left">
+        <div style="font-size:0.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-400);margin-bottom:1rem">Order Details</div>
 
-                    <a href="<?= base_url("/myorder/detail/$content->invoice") ?>"
-                        class="btn btn-success btn-block font-weight-bold"><i class="fas fa-credit-card"></i> Konfirmasi
-                        Pembayaran</a>
-                    <a href="<?= base_url('/') ?>" class="btn btn-secondary btn-block font-weight-bold"><i
-                            class="fas fa-arrow-left"></i> Kembali Ke Beranda</a>
-                </div>
+        <div class="flex justify-between mb-2">
+            <span style="font-size:0.85rem;color:var(--gray-500)">Invoice</span>
+            <span style="font-size:0.85rem;font-weight:600">#<?= e($content->invoice) ?></span>
+        </div>
+        <div class="flex justify-between">
+            <span style="font-size:0.85rem;color:var(--gray-500)">Total Payment</span>
+            <span style="font-size:0.85rem;font-weight:700">Rp <?= formatRupiah($content->total) ?></span>
+        </div>
+    </div>
+
+    <div style="text-align:left;margin-bottom:2rem">
+        <div style="font-size:0.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-400);margin-bottom:0.75rem">Transfer to:</div>
+        <div class="bank-list">
+            <div class="bank-list__item">
+                <img src="<?= base_url("assets/img/logo_bca.png") ?>" alt="BCA">
+                <span><strong>BCA 5139742685</strong> a/n NOMADENSTUFF</span>
+            </div>
+            <div class="bank-list__item">
+                <img src="<?= base_url("assets/img/logo_bri.png") ?>" alt="BRI">
+                <span><strong>BRI 196214652186437</strong> a/n NOMADENSTUFF</span>
+            </div>
+            <div class="bank-list__item">
+                <img src="<?= base_url("assets/img/logo_bni.png") ?>" alt="BNI">
+                <span><strong>BNI 7982562143</strong> a/n NOMADENSTUFF</span>
+            </div>
+            <div class="bank-list__item">
+                <img src="<?= base_url("assets/img/logo_bsi.png") ?>" alt="BSI">
+                <span><strong>BSI 652146347895214</strong> a/n NOMADENSTUFF</span>
+            </div>
+            <div class="bank-list__item">
+                <img src="<?= base_url("assets/img/logo_mandiri.png") ?>" alt="Mandiri">
+                <span><strong>Mandiri 456321789532164</strong> a/n NOMADENSTUFF</span>
             </div>
         </div>
+    </div>
+
+    <p style="font-size:0.85rem;color:var(--gray-500);margin-bottom:1.5rem">After transferring, please confirm your payment.</p>
+
+    <div class="flex flex-col gap-2" style="max-width:400px;margin:0 auto">
+        <a href="<?= base_url("/myorder/detail/$content->invoice") ?>" class="btn btn--black w-full">
+            Confirm Payment
+        </a>
+        <a href="<?= base_url('/') ?>" class="btn btn--outline w-full">Back to Home</a>
     </div>
 </div>

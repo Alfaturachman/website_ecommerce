@@ -37,7 +37,6 @@ class Checkout extends MY_Controller
         }
 
         $data['provinces'] = json_decode($this->rajaongkir->province(), true);
-        $data['cities']    = json_decode($this->rajaongkir->city(), true);
 
         // Set the default value for the 'name' input field
         $data['input']     = $input ? $input : (object) array_merge(

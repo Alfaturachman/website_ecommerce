@@ -1,131 +1,121 @@
-<div class="container my-5">
-    <div class="row">
-        <div class="col-12">
-            <div class="row">
-                <div class="col-6">
-                    <p class="h5 mb-3"><strong>Ringkasan Keranjang Belanja</strong></p>
-                    <div class="card p-3">
-                        <div class="site-blocks-table table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Produk</th>
-                                        <th>Jumlah</th>
-                                        <th>Price</th>
-                                        <th>Subtotal</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($cart as $row) : ?>
-                                        <tr>
-                                            <td style="white-space: nowrap; width: 1%;"><?= e($row->title) ?>
-                                                <br>
-                                                <img src="<?= $row->image ? base_url("images/product/$row->image") : base_url("images/product/default.jpg") ?>" alt="<?= e($row->title) ?>" height="100" class="img-responsive">
-                                            </td>
-                                            <td><?= e($row->quantity) ?></td>
-                                            <td>Rp<?= formatRupiah($row->price) ?></td>
-                                            <td>Rp<?= formatRupiah($row->sub_total) ?></td>
-                                        </tr>
-                                    <?php endforeach ?>
-                                </tbody>
-                                <tfoot>
-                                    <?php
-                                    $subtotal = array_sum(array_column($cart, 'sub_total'));
-                                    $discount = calculateDiscount($subtotal);
-                                    ?>
-                                    <tr>
-                                        <td colspan="3"><strong>Subtotal</strong></td>
-                                        <td>
-                                            <strong>Rp<?= formatRupiah($subtotal) ?></strong>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="3"><strong>Diskon (<?= e($discount['percentage']) ?>%)</strong></td>
-                                        <td>
-                                            <strong>Rp<?= formatRupiah($discount['amount']) ?></strong>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="3"><strong>Ongkos Kirim</strong></td>
-                                        <td>
-                                            <strong>
-                                                <span id="shippingCost"></span>
-                                            </strong>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="3"><strong>Total Belanja</strong></td>
-                                        <td>
-                                            <strong>
-                                                <span id="totalBelanja">Rp<?= formatRupiah($discount['total']) ?></span>
-                                            </strong>
-                                        </td>
-                                    </tr>
-                                </tfoot>
-                            </table>
-                        </div>
+<div style="padding:3rem 2rem;max-width:var(--max-width);margin:0 auto">
+    <h1 style="font-size:1.35rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:2rem">Checkout</h1>
+
+    <div class="checkout-grid">
+        <div>
+            <div style="border:1px solid var(--gray-100);padding:1.5rem;margin-bottom:2rem">
+                <div style="font-size:0.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-400);margin-bottom:1rem">Order Summary</div>
+
+                <?php foreach ($cart as $row) : ?>
+                <div class="cart-item" style="padding:0.75rem 0">
+                    <div class="cart-item__image" style="width:60px;height:60px">
+                        <img src="<?= $row->image ? base_url("images/product/$row->image") : base_url("images/product/default.jpg") ?>" alt="<?= e($row->title) ?>">
                     </div>
-                </div>
-                <div class="col-6">
-                    <p class="h5 mb-3"><strong>Formulir Alamat Pengiriman</strong></p>
-                    <div class="card p-3">
-                        <form action="<?= base_url('checkout/create') ?>" method="POST">
-                            <div class="form-group">
-                                <label for=""><strong>Nama</strong></label>
-                                <input type="text" class="form-control" name="name" placeholder="Masukkan Nama Penerima" value="<?= e(isset($input->name) ? $input->name : $userData->name) ?>">
-                                <?= form_error('name') ?>
-                            </div>
-                            <div class="form-group">
-                                <label for=""><strong>Telepon</strong></label>
-                                <input type="text" class="form-control" name="phone" placeholder="Masukkan Nomor Telepon Penerima" value="<?= e(isset($input->phone) ? $input->phone : $userData->phone) ?>">
-                                <?= form_error('phone') ?>
-                            </div>
-                            <div class="form-group">
-                                <label for=""><strong>Alamat</strong></label>
-                                <input type="text" name="address" class="form-control" placeholder="Contoh: Jl. Jendral Soedirman No.32" value="<?= e(isset($input->address) ? $input->address : $userData->address) ?>">
-                                <?= form_error('address') ?>
-                            </div>
-                            <?php $data_provinsi = getRajaOngkirProvinces(); ?>
-                            <div class="form-group">
-                                <label><strong>Provinsi</strong></label>
-                                <select id='provinsi' name='provinsi' class="custom-select d-block w-100 form-control">
-                                    <option value="" selected disabled>- Pilih Provinsi Tujuan -</option>
-                                    <?php for ($i = 0; $i < count($data_provinsi['rajaongkir']['results']); $i++) : ?>
-                                        <option value="<?= e($data_provinsi['rajaongkir']['results'][$i]['province_id']) ?>">
-                                            <?= e($data_provinsi['rajaongkir']['results'][$i]['province']) ?>
-                                        </option>
-                                    <?php endfor; ?>
-                                </select>
-                                <?= form_error('provinsi') ?>
-                            </div>
-                            <div class="form-group">
-                                <label><strong>Kabupaten / Kota</strong></label>
-                                <select id="kabupaten" name="kabupaten" class="custom-select d-block w-100 form-control">
-                                    <option value="">- Pilih Kabupaten / Kota -</option>
-                                </select>
-                                <?= form_error('kabupaten') ?>
-                            </div>
-                            <div class="form-group">
-                                <label for=""><strong>Jasa Pengiriman</strong></label>
-                                <select name="courier" id="courier" class="form-control">
-                                    <option value="">- Pilih Jasa Pengiriman -</option>
-                                    <option value="jne">JNE</option>
-                                    <option value="tiki">Tiki</option>
-                                    <option value="pos">POS Indonesia</option>
-                                </select>
-                                <?= form_error('courier') ?>
-                            </div>
-                            <input type="hidden" name="discountPercentage" id="discountPercentageInput" value="<?= e($discount['percentage']) ?>">
-                            <input type="hidden" name="diskon" id="diskonInput" value="<?= e($discount['amount']) ?>">
-                            <input type="hidden" name="shippingCost" id="shippingCostInput" required>
-                            <input type="hidden" name="totalBelanja" id="totalBelanjaInput" required>
-                            <input type="hidden" id="discountTotal" value="<?= e($discount['total']) ?>">
-                            <input type="hidden" id="discountAmount" value="<?= e($discount['amount']) ?>">
-                            <button class="btn btn-success btn-block mt-4" type="submit"><i class="fas fa-credit-card"></i>
-                                <strong> Lanjut Pembayaran</strong></button>
-                        </form>
+                    <div class="cart-item__info">
+                        <div class="cart-item__title" style="font-size:0.82rem"><?= e($row->title) ?></div>
+                        <div class="cart-item__meta">Qty: <?= e($row->quantity) ?></div>
                     </div>
+                    <div class="cart-item__price">Rp <?= formatRupiah($row->sub_total) ?></div>
                 </div>
+                <?php endforeach ?>
+
+                <?php
+                $subtotal = array_sum(array_column($cart, 'sub_total'));
+                $discount = calculateDiscount($subtotal);
+                ?>
+                <hr class="divider">
+                <div class="flex justify-between mb-2">
+                    <span style="font-size:0.82rem;color:var(--gray-500)">Subtotal</span>
+                    <span style="font-size:0.82rem;font-weight:500">Rp <?= formatRupiah($subtotal) ?></span>
+                </div>
+                <?php if ($discount['percentage'] > 0) : ?>
+                <div class="flex justify-between mb-2">
+                    <span style="font-size:0.82rem;color:var(--gray-500)">Discount (<?= e($discount['percentage']) ?>%)</span>
+                    <span style="font-size:0.82rem;font-weight:500;color:#555">-Rp <?= formatRupiah($discount['amount']) ?></span>
+                </div>
+                <?php endif ?>
+                <div class="flex justify-between mb-2">
+                    <span style="font-size:0.82rem;color:var(--gray-500)">Shipping</span>
+                    <span style="font-size:0.82rem;font-weight:500" id="shippingCost">-</span>
+                </div>
+                <hr class="divider">
+                <div class="flex justify-between">
+                    <span style="font-size:1rem;font-weight:700">Total</span>
+                    <span style="font-size:1rem;font-weight:700" id="totalBelanja">Rp <?= formatRupiah($discount['total']) ?></span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div style="border:1px solid var(--gray-100);padding:1.5rem">
+                <div style="font-size:0.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-400);margin-bottom:1rem">Shipping Address</div>
+
+                <form action="<?= base_url('checkout/create') ?>" method="POST">
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-input" name="name" placeholder="Recipient name" value="<?= e(isset($input->name) ? $input->name : $userData->name) ?>">
+                        <?= form_error('name') ?>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Phone</label>
+                        <input type="text" class="form-input" name="phone" placeholder="Phone number" value="<?= e(isset($input->phone) ? $input->phone : $userData->phone) ?>">
+                        <?= form_error('phone') ?>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Address</label>
+                        <input type="text" class="form-input" name="address" placeholder="Street address" value="<?= e(isset($input->address) ? $input->address : $userData->address) ?>">
+                        <?= form_error('address') ?>
+                    </div>
+
+                    <?php $data_provinsi = isset($provinces) ? $provinces : getRajaOngkirProvinces(); ?>
+                    <div class="form-group">
+                        <label class="form-label">Province</label>
+                        <select id='provinsi' name='provinsi' class="form-select">
+                            <option value="" selected disabled>- Select Province -</option>
+                            <?php if ($data_provinsi && isset($data_provinsi['rajaongkir']['results'])) : ?>
+                            <?php for ($i = 0; $i < count($data_provinsi['rajaongkir']['results']); $i++) : ?>
+                                <option value="<?= e($data_provinsi['rajaongkir']['results'][$i]['province_id']) ?>">
+                                    <?= e($data_provinsi['rajaongkir']['results'][$i]['province']) ?>
+                                </option>
+                            <?php endfor; ?>
+                            <?php endif ?>
+                        </select>
+                        <?= form_error('provinsi') ?>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">City</label>
+                        <select id="kabupaten" name="kabupaten" class="form-select">
+                            <option value="">- Select City -</option>
+                        </select>
+                        <?= form_error('kabupaten') ?>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Courier</label>
+                        <select name="courier" id="courier" class="form-select">
+                            <option value="">- Select Courier -</option>
+                            <option value="jne">JNE</option>
+                            <option value="tiki">Tiki</option>
+                            <option value="pos">POS Indonesia</option>
+                        </select>
+                        <?= form_error('courier') ?>
+                    </div>
+
+                    <input type="hidden" name="discountPercentage" id="discountPercentageInput" value="<?= e($discount['percentage']) ?>">
+                    <input type="hidden" name="diskon" id="diskonInput" value="<?= e($discount['amount']) ?>">
+                    <input type="hidden" name="shippingCost" id="shippingCostInput" required>
+                    <input type="hidden" name="totalBelanja" id="totalBelanjaInput" required>
+                    <input type="hidden" id="discountTotal" value="<?= e($discount['total']) ?>">
+                    <input type="hidden" id="discountAmount" value="<?= e($discount['amount']) ?>">
+
+                    <button type="submit" class="btn btn--black w-full mt-4" style="height:48px;font-size:0.78rem">
+                        Place Order
+                        <i class="fas fa-arrow-right" style="font-size:0.65rem"></i>
+                    </button>
+                </form>
             </div>
         </div>
     </div>
@@ -148,7 +138,6 @@ $(document).on("change", "#kabupaten, select[name='courier']", function() {
             success: function(data) {
                 var ongkirResults = data.shipping_cost || 0;
                 var discountTotal = parseFloat($('#discountTotal').val()) || 0;
-                var discountAmount = parseFloat($('#discountAmount').val()) || 0;
 
                 $('#shippingCost').text('Rp' + number_format(ongkirResults, 0, ',', '.'));
                 $('#shippingCostInput').val(ongkirResults);
@@ -158,7 +147,7 @@ $(document).on("change", "#kabupaten, select[name='courier']", function() {
                 $('#totalBelanjaInput').val(totalBelanja);
             },
             error: function(xhr, status, error) {
-                console.error('Error updating shipping rates:', error);
+                console.error('Error:', error);
             }
         });
     }

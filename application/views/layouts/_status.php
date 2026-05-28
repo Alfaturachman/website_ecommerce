@@ -1,35 +1,35 @@
 <?php
 switch ($status) {
     case 'waiting':
-        $badge = 'badge-secondary';
-        $label = 'Menunggu Pembayaran';
+        $badge = 'badge--waiting';
+        $label = 'Waiting Payment';
         break;
     case 'paid':
-        $badge = 'badge-primary';
-        $label = 'Dibayar';
+        $badge = 'badge--paid';
+        $label = 'Paid';
         break;
     case 'process':
-        $badge = 'badge-warning';
-        $label = 'Diproses Penjual';
+        $badge = 'badge--process';
+        $label = 'Processing';
         break;
     case 'delivered':
-        $badge = 'badge-info';
-        $label = 'Dikirim';
+        $badge = 'badge--delivered';
+        $label = 'Delivered';
         break;
     case 'done':
-        $badge = 'badge-success';
-        $label = 'Selesai';
+        $badge = 'badge--done';
+        $label = 'Completed';
         break;
     case 'cancel':
-        $badge = 'badge-danger';
-        $label = 'Dibatalkan';
+        $badge = 'badge--cancel';
+        $label = 'Cancelled';
         break;
     default:
-        $badge = 'badge-secondary';
+        $badge = 'badge--waiting';
         $label = $status;
 }
 ?>
 
 <?php if ($label) : ?>
-    <span class="badge badge-pill <?= $badge ?>"><?= $label ?></span>
+    <span class="badge <?= $badge ?>"><?= $label ?></span>
 <?php endif ?>

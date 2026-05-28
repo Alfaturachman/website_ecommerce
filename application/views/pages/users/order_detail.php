@@ -1,122 +1,152 @@
-<div class="container my-5">
-    <div class="row">
-        <div class="col-md-3 col-sm-12">
+<div style="padding:3rem 2rem;max-width:var(--max-width);margin:0 auto">
+    <div class="profile-layout">
+        <aside class="profile-sidebar">
             <?php $this->load->view('layouts/user/_sidebar') ?>
-        </div>
-        <div class="col-md-9 col-sm-12">
-            <div class="card mb-3">
-                <div class="card-header d-flex justify-content-between">
-                    <p class="m-0 p-0 h5"><strong class="font-weight-bold">Detail Order </strong></p>
-                    <?php $this->load->view('layouts/_status', ['status' => $order->status]); ?>
-                </div>
-                <div class="card-body">
-                    <?php if ($order->status == 'waiting') : ?>
-                        <p class="alert alert-warning text-center">
-                            <strong>Waktu Checkout Tersisa:
-                                <br>
-                                <span class="h4" id="countdown"></span>
-                            </strong>
-                        </p>
-                    <?php endif ?>
-                    <p>Nomor Invoice : #<?= e($order->invoice) ?></p>
-                    <p>Tanggal : <?= date('d/m/Y', strtotime($order->date)) ?></p>
-                    <p>Nama : <?= e($order->name) ?></p>
-                    <p>Telepon : <?= e($order->phone) ?></p>
-                    <p>Alamat : <?= e($order->address) ?>, <?= e($order->city) ?>, <?= e($order->province) ?></p>
-                    <p>Jasa Pengiriman : <?= e($order->courier) ?></p>
-                    <?php if ($order->waybill != "") : ?>
-                        <p>No. Resi : <?= e($order->waybill) ?></p>
-                    <?php endif ?>
-                    <?php foreach ($order_detail as $row) : ?>
-                        <div class="card-group">
-                            <div class="card mb-3">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <img src="<?= $row->image ? base_url("images/product/$row->image") : base_url("images/product/default.jpg") ?>" alt="<?= e($row->title) ?>" class="img-responsive mb-2" height="150">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <h5 class="card-title"><strong><?= e($row->title) ?></strong></h5>
-                                            <p class="card-text"><strong>Harga:</strong> Rp <?= formatRupiah($row->price) ?></p>
-                                            <p class="card-text"><strong>Jumlah:</strong> <?= e($row->quantity) ?></p>
-                                            <p class="card-text"><strong>Subtotal:</strong> Rp <?= formatRupiah($row->sub_total) ?></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endforeach ?>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <tfoot style="background-color: rgba(221, 221, 221, 0.25);">
-                                <tr>
-                                    <td colspan="4" class="border-top border-bottom"><strong>Total Belanja</strong></td>
-                                    <td class="border-top border-bottom text-right"><strong>Rp <?= formatRupiah(array_sum(array_column($order_detail, 'sub_total'))) ?></strong></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4" class="border-top border-bottom">Diskon <?= e($order->diskon_persen) ?>%</td>
-                                    <td class="border-top border-bottom text-right">Rp <?= formatRupiah($order->diskon) ?></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4" class="border-top border-bottom">Ongkos Kirim</td>
-                                    <td class="border-top border-bottom text-right">Rp <?= formatRupiah($order->cost_courier) ?></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4" class="border-top border-bottom"><strong>Total Bayar</strong></td>
-                                    <td class="border-top border-bottom text-right"><strong>Rp <?= formatRupiah($order->total) ?></strong></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                    <?php if ($order->status == 'waiting') : ?>
-                        <div class="mt-3">
-                            <button class="btn btn-danger btn-block mb-2" data-toggle="modal" data-target="#cancelOrderModal">
-                                <strong><i class="fas fa-times"></i> Batalkan Pesanan</strong>
-                            </button>
-                            <a href="<?= base_url("/myorder/confirm/$order->invoice") ?>" class="btn btn-success btn-block"><i class="fas fa-credit-card"></i>
-                                <strong>Lanjutkan Pembayaran</strong>
-                            </a>
-                        </div>
-                    <?php endif ?>
+        </aside>
 
-                    <div class="modal fade" id="cancelOrderModal" tabindex="-1" role="dialog" aria-labelledby="cancelOrderModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="cancelOrderModalLabel">Konfirmasi Pembatalan Pesanan</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    Apakah Anda yakin ingin membatalkan pesanan?
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
-                                    <a href="<?= base_url("/myorder/cancel/$order->invoice") ?>" class="btn btn-danger" onclick="cancelOrderAndResetTimer()">Ya, Batalkan Pesanan</a>
-                                </div>
-                            </div>
-                        </div>
+        <div>
+            <div class="flex justify-between items-center mb-4">
+                <h1 style="font-size:1.25rem;font-weight:700;letter-spacing:-0.02em">Order Detail</h1>
+                <?php $this->load->view('layouts/_status', ['status' => $order->status]); ?>
+            </div>
+
+            <?php if ($order->status == 'waiting') : ?>
+            <div style="border:1px solid var(--gray-100);padding:1rem;margin-bottom:1.5rem;text-align:center">
+                <p style="font-size:0.82rem;color:var(--gray-500);margin-bottom:0.25rem">Time remaining to complete payment:</p>
+                <span style="font-size:1.5rem;font-weight:800;letter-spacing:0.05em" id="countdown"></span>
+            </div>
+            <?php endif ?>
+
+            <div style="border:1px solid var(--gray-100);padding:1.5rem;margin-bottom:1.5rem">
+                <div style="font-size:0.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-400);margin-bottom:1rem">Shipping Info</div>
+
+                <div class="detail-info__attrs" style="grid-template-columns:1fr 1fr">
+                    <div>
+                        <div class="detail-info__attr-label">Invoice</div>
+                        <div class="detail-info__attr-value">#<?= e($order->invoice) ?></div>
                     </div>
+                    <div>
+                        <div class="detail-info__attr-label">Date</div>
+                        <div class="detail-info__attr-value"><?= date('d/m/Y', strtotime($order->date)) ?></div>
+                    </div>
+                    <div>
+                        <div class="detail-info__attr-label">Name</div>
+                        <div class="detail-info__attr-value"><?= e($order->name) ?></div>
+                    </div>
+                    <div>
+                        <div class="detail-info__attr-label">Phone</div>
+                        <div class="detail-info__attr-value"><?= e($order->phone) ?></div>
+                    </div>
+                    <div style="grid-column:1/-1">
+                        <div class="detail-info__attr-label">Address</div>
+                        <div class="detail-info__attr-value"><?= e($order->address) ?>, <?= e($order->city) ?>, <?= e($order->province) ?></div>
+                    </div>
+                    <div>
+                        <div class="detail-info__attr-label">Courier</div>
+                        <div class="detail-info__attr-value"><?= e($order->courier) ?></div>
+                    </div>
+                    <?php if ($order->waybill != "") : ?>
+                    <div>
+                        <div class="detail-info__attr-label">Waybill</div>
+                        <div class="detail-info__attr-value"><?= e($order->waybill) ?></div>
+                    </div>
+                    <?php endif ?>
+                </div>
+            </div>
+
+            <div style="border:1px solid var(--gray-100);padding:1.5rem;margin-bottom:1.5rem">
+                <div style="font-size:0.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-400);margin-bottom:1rem">Items</div>
+
+                <?php foreach ($order_detail as $row) : ?>
+                <div class="cart-item">
+                    <div class="cart-item__image" style="width:60px;height:60px">
+                        <img src="<?= $row->image ? base_url("images/product/$row->image") : base_url("images/product/default.jpg") ?>" alt="<?= e($row->title) ?>">
+                    </div>
+                    <div class="cart-item__info">
+                        <div class="cart-item__title" style="font-size:0.82rem"><?= e($row->title) ?></div>
+                        <div class="cart-item__meta">Qty: <?= e($row->quantity) ?> &times; Rp <?= formatRupiah($row->price) ?></div>
+                    </div>
+                    <div class="cart-item__price">Rp <?= formatRupiah($row->sub_total) ?></div>
+                </div>
+                <?php endforeach ?>
+
+                <hr class="divider">
+                <div class="flex justify-between mb-2">
+                    <span style="font-size:0.85rem;color:var(--gray-500)">Subtotal</span>
+                    <span style="font-size:0.85rem;font-weight:500">Rp <?= formatRupiah(array_sum(array_column($order_detail, 'sub_total'))) ?></span>
+                </div>
+                <div class="flex justify-between mb-2">
+                    <span style="font-size:0.85rem;color:var(--gray-500)">Discount (<?= e($order->diskon_persen) ?>%)</span>
+                    <span style="font-size:0.85rem;color:#555">-Rp <?= formatRupiah($order->diskon) ?></span>
+                </div>
+                <div class="flex justify-between mb-2">
+                    <span style="font-size:0.85rem;color:var(--gray-500)">Shipping</span>
+                    <span style="font-size:0.85rem;font-weight:500">Rp <?= formatRupiah($order->cost_courier) ?></span>
+                </div>
+                <hr class="divider">
+                <div class="flex justify-between">
+                    <span style="font-size:1rem;font-weight:700">Total</span>
+                    <span style="font-size:1rem;font-weight:700">Rp <?= formatRupiah($order->total) ?></span>
                 </div>
             </div>
 
             <?php if (isset($order_confirm)) : ?>
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <strong>Bukti Transfer</strong>
+            <div style="border:1px solid var(--gray-100);padding:1.5rem;margin-bottom:1.5rem">
+                <div style="font-size:0.65rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gray-400);margin-bottom:1rem">Payment Confirmation</div>
+                <div class="detail-info__attrs" style="grid-template-columns:1fr 1fr">
+                    <div>
+                        <div class="detail-info__attr-label">Account No.</div>
+                        <div class="detail-info__attr-value"><?= e($order_confirm->account_number) ?></div>
                     </div>
-                    <div class="card-body">
-                        <p>No Rekening : <?= e($order_confirm->account_number) ?></p>
-                        <p>Atas Nama : <?= e($order_confirm->account_name) ?></p>
-                        <p>Nominal : Rp <?= formatRupiah($order_confirm->nominal) ?></p>
-                        <p>Note : <?= e($order_confirm->note) ?></p>
-                        <div class="mt-3">
-                            <img src="<?= base_url("/images/confirm/$order_confirm->image") ?>" alt="" height="200" class="img-responsive">
-                        </div>
+                    <div>
+                        <div class="detail-info__attr-label">Account Name</div>
+                        <div class="detail-info__attr-value"><?= e($order_confirm->account_name) ?></div>
+                    </div>
+                    <div>
+                        <div class="detail-info__attr-label">Amount</div>
+                        <div class="detail-info__attr-value">Rp <?= formatRupiah($order_confirm->nominal) ?></div>
+                    </div>
+                    <div>
+                        <div class="detail-info__attr-label">Note</div>
+                        <div class="detail-info__attr-value"><?= e($order_confirm->note) ?></div>
                     </div>
                 </div>
+                <div class="mt-4">
+                    <img src="<?= base_url("/images/confirm/$order_confirm->image") ?>" alt="Proof" style="max-width:300px;border:1px solid var(--gray-100)">
+                </div>
+            </div>
             <?php endif ?>
+
+            <?php if ($order->status == 'waiting') : ?>
+            <div class="flex gap-2">
+                <button class="btn btn--outline w-full" data-toggle="modal" data-target="#cancelOrderModal">
+                    <i class="fas fa-times" style="font-size:0.65rem"></i>
+                    Cancel Order
+                </button>
+                <a href="<?= base_url("/myorder/confirm/$order->invoice") ?>" class="btn btn--black w-full">
+                    Proceed to Payment
+                    <i class="fas fa-arrow-right" style="font-size:0.65rem"></i>
+                </a>
+            </div>
+            <?php endif ?>
+        </div>
+    </div>
+
+    <div class="modal fade" id="cancelOrderModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:380px">
+            <div class="modal-content" style="border:none;border-radius:2px;padding:1.5rem">
+                <div class="modal-header" style="border:none;padding:0 0 0.75rem">
+                    <h5 class="modal-title" style="font-size:0.9rem;font-weight:700">Cancel Order</h5>
+                    <button type="button" class="close" data-dismiss="modal" style="font-size:1.25rem;color:#999">&times;</button>
+                </div>
+                <div class="modal-body" style="padding:0 0 1.25rem">
+                    <p style="font-size:0.82rem;color:var(--gray-500);margin:0">Are you sure you want to cancel this order?</p>
+                </div>
+                <div class="modal-footer" style="border:none;padding:0;gap:0.5rem;display:flex">
+                    <button type="button" class="btn btn--outline btn--sm" data-dismiss="modal" style="flex:1;margin:0">No</button>
+                    <a href="<?= base_url("/myorder/cancel/$order->invoice") ?>" class="btn btn--black btn--sm" style="flex:1;margin:0" onclick="cancelOrderAndResetTimer()">Yes, Cancel</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -139,7 +169,7 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("countdown").innerHTML = formatTime(remainingTime);
 
             if (remainingTime <= 0) {
-                alert("Waktu checkout telah habis. Pesanan telah dibatalkan!");
+                alert("Payment time has expired. Order has been cancelled!");
                 cancelOrder();
                 clearInterval(intervalId);
                 localStorage.removeItem(`checkout_end_time_${orderID}`);

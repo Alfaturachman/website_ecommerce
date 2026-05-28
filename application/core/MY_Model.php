@@ -239,6 +239,7 @@ class MY_Model extends CI_Model
             'per_page'          => $this->perPage,
             'total_rows'        => $totalRows,
             'use_page_numbers'  => true,
+            'reuse_query_string' => true,
 
             'full_tag_open'		=> '<ul class="pagination">',
 			'full_tag_close'	=> '</ul>',

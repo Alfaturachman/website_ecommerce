@@ -1,58 +1,24 @@
-<style>
-ul.border-none {
-    border: none !important;
-}
-
-li.border-none {
-    border: none !important;
-}
-
-.card {
-    box-shadow: none;
-    border-radius: 10px;
-}
-
-.list-group-item.active {
-    background-color: #343a40;
-    border-color: #343a40;
-}
-
-.list-group-item.active a {
-    color: white !important;
-    background-color: transparent !important;
-}
-
-.list-group-item {
-    cursor: pointer;
-    transition: background-color 0.3s;
-    /* Add transition for a smoother effect */
-}
-
-.menu {
-    background-color: #EEEEEE;
-    /* Add transition for a smoother effect */
-}
-
-.list-group-item:not(.active):hover {
-    background-color: #EEEEEE;
-    /* Change the background color on hover for non-active items */
-}
-</style>
-
-<div class="card p-3">
-    <p class="text-center"><strong>PENGATURAN</strong></p>
-    <ul class="border-none m-0 p-0">
-        <li class="border-none list-group-item <?php echo strpos(uri_string(), 'profile') !== false ? 'active' : ''; ?>"
-            onclick="window.location.href='<?= base_url('profile') ?>';">
-            Profil
-        </li>
-        <li class="border-none list-group-item <?php echo strpos(uri_string(), 'myorder') !== false ? 'active' : ''; ?>"
-            onclick="window.location.href='<?= base_url('myorder') ?>';">
-            Orders
-        </li>
-        <li class="border-none list-group-item <?php echo uri_string() == 'logout' ? 'active' : ''; ?>"
-            onclick="window.location.href='<?= base_url('logout') ?>';">
-            Logout
-        </li>
-    </ul>
+<div class="profile-sidebar__user">
+    <div class="profile-sidebar__avatar">
+        <?= strtoupper(substr($this->session->userdata('name'), 0, 1)) ?>
+    </div>
+    <div class="profile-sidebar__info">
+        <div class="profile-sidebar__name"><?= e($this->session->userdata('name')) ?></div>
+        <div class="profile-sidebar__email"><?= e($this->session->userdata('email')) ?></div>
+    </div>
 </div>
+
+<nav class="profile-sidebar__nav">
+    <a href="<?= base_url('profile') ?>" class="profile-sidebar__item <?php echo strpos(uri_string(), 'profile') !== false ? 'profile-sidebar__item--active' : ''; ?>">
+        <i class="fas fa-user"></i>
+        <span>Profile</span>
+    </a>
+    <a href="<?= base_url('myorder') ?>" class="profile-sidebar__item <?php echo strpos(uri_string(), 'myorder') !== false ? 'profile-sidebar__item--active' : ''; ?>">
+        <i class="fas fa-box"></i>
+        <span>Orders</span>
+    </a>
+    <a href="<?= base_url('logout') ?>" class="profile-sidebar__item profile-sidebar__item--logout">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+    </a>
+</nav>

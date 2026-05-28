@@ -14,15 +14,46 @@ class Myorder extends MY_Controller
         $this->_requireLogin();
     }
 
-    public function index($page = null)
+    public function index($status = null)
     {
         $data['title']      = "Daftar Order";
-        $data['content']    = $this->myorder
-            ->where('id_user', $this->id)
+        $data['status']     = $status;
+
+        $this->myorder->where('id_user', $this->id);
+        if ($status && $status !== 'all') {
+            $this->myorder->where('status', $status);
+        }
+        $data['content'] = $this->myorder
             ->orderBy('invoice', 'DESC')
             ->get();
 
-        $data['total_rows'] = $this->myorder->where('id_user', $this->id)->count();
+        if (!empty($data['content'])) {
+            $orderIds = [];
+            foreach ($data['content'] as $o) {
+                $orderIds[] = $o->id;
+            }
+            $this->db->select('order_detail.id_orders, MAX(product.image) as image, MAX(product.title) as title, SUM(order_detail.quantity) as total_items');
+            $this->db->from('order_detail');
+            $this->db->join('product', 'product.id = order_detail.id_product');
+            $this->db->where_in('order_detail.id_orders', $orderIds);
+            $this->db->group_by('order_detail.id_orders');
+            $images = $this->db->get()->result();
+            $imageMap = [];
+            foreach ($images as $img) {
+                $imageMap[$img->id_orders] = $img;
+            }
+            foreach ($data['content'] as $order) {
+                $order->product_image = isset($imageMap[$order->id]) ? $imageMap[$order->id]->image : null;
+                $order->product_title = isset($imageMap[$order->id]) ? $imageMap[$order->id]->title : null;
+                $order->total_items = isset($imageMap[$order->id]) ? $imageMap[$order->id]->total_items : 0;
+            }
+        }
+
+        $this->myorder->where('id_user', $this->id);
+        if ($status && $status !== 'all') {
+            $this->myorder->where('status', $status);
+        }
+        $data['total_rows'] = $this->myorder->count();
         $data['page']       = 'pages/users/orders';
 
         $this->view($data);

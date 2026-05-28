@@ -32,3 +32,5 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 
 SOFTWARE_ARCHITECTURE_QUALITY.md
 user login, admin.txt
+nomadenstuff.sql
+ERD Diagram.jpg

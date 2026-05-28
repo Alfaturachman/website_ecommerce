@@ -101,6 +101,16 @@ if (!function_exists('calculateDiscount')) {
 if (!function_exists('getRajaOngkirProvinces')) {
     function getRajaOngkirProvinces()
     {
+        $CI =& get_instance();
+        $cache_file = APPPATH . 'cache/rajaongkir_provinces.json';
+
+        if (file_exists($cache_file) && (time() - filemtime($cache_file)) < 86400) {
+            $cached = json_decode(file_get_contents($cache_file), true);
+            if ($cached && isset($cached['rajaongkir']['results'])) {
+                return $cached;
+            }
+        }
+
         $curl = curl_init();
         curl_setopt_array($curl, [
             CURLOPT_URL => "http://api.rajaongkir.com/starter/province",
@@ -118,7 +128,12 @@ if (!function_exists('getRajaOngkirProvinces')) {
         $response = curl_exec($curl);
         curl_close($curl);
 
-        return json_decode($response, true);
+        $result = json_decode($response, true);
+        if ($result && isset($result['rajaongkir']['status']['code']) && $result['rajaongkir']['status']['code'] == 200) {
+            @file_put_contents($cache_file, json_encode($result));
+        }
+
+        return $result;
     }
 }
 
