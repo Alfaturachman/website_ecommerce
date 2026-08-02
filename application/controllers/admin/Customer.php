@@ -19,8 +19,9 @@ class Customer extends MY_Controller
     {
         $data['title']      = "Admin: Customer";
         $data['content']    = $this->user->select(
-            ['user.id', 'user.name AS user_name', 'user.email AS user_email', 'user.password', 'user.image']
+            ['user.id', 'user.name AS user_name', 'user.email AS user_email', 'user.image']
         )
+            ->paginate($page)
             ->get();
         $data['total_rows'] = $this->user->count();
         $data['pagination'] = $this->user->makePagination(
@@ -35,16 +36,20 @@ class Customer extends MY_Controller
 
     public function search($page = null)
     {
-        if (isset($_POST['keyword'])) {
+        if ($this->input->post('keyword')) {
             $this->session->set_userdata('keyword', $this->input->post('keyword'));
-        } else {
-            redirect(base_url('admin/customer'));
         }
 
-        $keyword = $this->input->post('keyword');
+        $keyword = $this->session->userdata('keyword');
+
+        if (!$keyword) {
+            redirect(base_url('admin/customer'));
+            return;
+        }
+
         $data['title']      = 'Admin User';
         $data['content']    = $this->user->select(
-            ['user.id', 'user.name AS user_name', 'user.email AS user_email', 'user.password', 'user.image']
+            ['user.id', 'user.name AS user_name', 'user.email AS user_email', 'user.image']
         )
             ->like('user.name', $keyword)
             ->orLike('user.email', $keyword)
@@ -80,7 +85,7 @@ class Customer extends MY_Controller
         $data = [
             'name'          => $input->name,
             'email'         => strtolower($input->email),
-            'password'      => hashEncrypt($input->password),
+            'password'      => password_hash($input->password, PASSWORD_DEFAULT),
             'date_register' => time()
         ];
 
@@ -90,7 +95,7 @@ class Customer extends MY_Controller
             $this->session->set_flashdata("error", "Opps! terjadi kesalahan.");
         }
 
-        redirect(base_url('admin/customer/index'));
+        redirect(base_url('admin/customer'));
     }
 
     public function edit($id)
@@ -144,8 +149,7 @@ class Customer extends MY_Controller
 
         // Include 'name', 'email', and 'password' in the data you update in the database
         $dataToUpdate = [
-            'name' => $data['input']->name,
-            'date_register' => time()
+            'name' => $data['input']->name
         ];
 
         if ($data['input']->email !== $data['content']->email) {
@@ -153,7 +157,7 @@ class Customer extends MY_Controller
         }
 
         if ($data['input']->password) {
-            $dataToUpdate['password'] = hashEncrypt($data['input']->password);
+            $dataToUpdate['password'] = password_hash($data['input']->password, PASSWORD_DEFAULT);
         }
 
         if ($this->user->where('id', $id)->update($dataToUpdate)) {
@@ -162,7 +166,7 @@ class Customer extends MY_Controller
             $this->session->set_flashdata("error", "Opps! terjadi kesalahan.");
         }
 
-        redirect(base_url('admin/customer/index'));
+        redirect(base_url('admin/customer'));
     }
 
 

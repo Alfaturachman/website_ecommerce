@@ -63,20 +63,6 @@ if (!function_exists('getCart')) {
     }
 }
 
-if (!function_exists('hashEncrypt')) {
-    function hashEncrypt($input)
-    {
-        return password_hash($input, PASSWORD_DEFAULT);
-    }
-}
-
-if (!function_exists('hashEncryptVerify')) {
-    function hashEncryptVerify($input, $hash)
-    {
-        return password_verify($input, $hash);
-    }
-}
-
 if (!function_exists('calculateDiscount')) {
     function calculateDiscount($subtotal)
     {
@@ -95,45 +81,6 @@ if (!function_exists('calculateDiscount')) {
             'amount' => $discountAmount,
             'total' => $subtotal - $discountAmount,
         ];
-    }
-}
-
-if (!function_exists('getRajaOngkirProvinces')) {
-    function getRajaOngkirProvinces()
-    {
-        $CI =& get_instance();
-        $cache_file = APPPATH . 'cache/rajaongkir_provinces.json';
-
-        if (file_exists($cache_file) && (time() - filemtime($cache_file)) < 86400) {
-            $cached = json_decode(file_get_contents($cache_file), true);
-            if ($cached && isset($cached['rajaongkir']['results'])) {
-                return $cached;
-            }
-        }
-
-        $curl = curl_init();
-        curl_setopt_array($curl, [
-            CURLOPT_URL => "http://api.rajaongkir.com/starter/province",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "GET",
-            CURLOPT_HTTPHEADER => [
-                "key: b89355f9434e0df1e842c84906a52cb5"
-            ],
-        ]);
-
-        $response = curl_exec($curl);
-        curl_close($curl);
-
-        $result = json_decode($response, true);
-        if ($result && isset($result['rajaongkir']['status']['code']) && $result['rajaongkir']['status']['code'] == 200) {
-            @file_put_contents($cache_file, json_encode($result));
-        }
-
-        return $result;
     }
 }
 

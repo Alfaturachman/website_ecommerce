@@ -1,7 +1,0 @@
-user login :
-	user : kresnaif@gmail.com
-	pw   :123
-
-user admin :
-  	user	: user
-	pw	: user

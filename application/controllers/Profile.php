@@ -24,7 +24,13 @@ class Profile extends MY_Controller
 
     public function update($id)
 	{
-		$data['content'] = $this->profile->where('id', $id)->first();
+		if ((int)$id !== (int)$this->id) {
+			$this->session->set_flashdata('warning', 'Akses ditolak! Anda tidak dapat mengedit profil pengguna lain.');
+			redirect(base_url('profile'));
+			return;
+		}
+
+		$data['content'] = $this->profile->where('id', $this->id)->first();
 
 		if (!$data['content']) {
 			$this->session->set_flashdata('warning', 'Maaf, data tidak dapat ditemukan');
@@ -36,7 +42,7 @@ class Profile extends MY_Controller
 		} else {
 			$data['input']	= (object) $this->input->post(null, true);
 			if ($data['input']->password !== '') {
-				$data['input']->password = hashEncrypt($data['input']->password);
+				$data['input']->password = password_hash($data['input']->password, PASSWORD_DEFAULT);
 			} else {
 				$data['input']->password = $data['content']->password;
 			}

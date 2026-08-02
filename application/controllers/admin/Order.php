@@ -24,13 +24,16 @@ class Order extends MY_Controller
 
 	public function search($page = null)
 	{
-		if (isset($_POST['keyword'])) {
+		if ($this->input->post('keyword')) {
 			$this->session->set_userdata('keyword', $this->input->post('keyword'));
-		} else {
-			redirect(base_url('order'));
 		}
 
-		$keyword	        = $this->session->userdata('keyword');
+		$keyword = $this->session->userdata('keyword');
+
+		if (!$keyword) {
+			redirect(base_url('admin/order'));
+			return;
+		}
 		$data['title']		= 'Admin: Order';
 		$data['content']	= $this->order->like('invoice', $keyword)
 			->orderBy('date', 'DESC')
@@ -57,7 +60,7 @@ class Order extends MY_Controller
 		$data['order']			= $this->order->where('id', $id)->first();
 		if (!$data['order']) {
 			$this->session->set_flashdata('warning', 'Data tidak ditemukan.');
-			redirect(base_url('order'));
+			redirect(base_url('admin/order'));
 		}
 
 		$this->order->table	= 'order_detail';
@@ -111,7 +114,7 @@ class Order extends MY_Controller
 	{
 		if (!$_POST) {
 			$this->session->set_flashdata('error', 'Oops! Terjadi kesalahan!');
-			redirect(base_url("order/detail/$id"));
+			redirect(base_url("admin/order/detail/$id"));
 		}
 
 		if ($this->input->post('waybill') != "") {

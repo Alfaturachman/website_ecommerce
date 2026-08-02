@@ -4,6 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Shop extends MY_Controller
 {
+	private $id;
 
 	private function _applyPriceFilter(&$data)
 	{
@@ -46,9 +47,9 @@ class Shop extends MY_Controller
 	}
 
 
-	public function men($page = null)
+	private function _gender($type, $title, $slug, $page = null)
 	{
-		$data['title']      = 'Produk Pria';
+		$data['title']      = $title;
 		$this->_applyPriceFilter($data);
 		$data['content']    = $this->shop->select(
 			[
@@ -58,71 +59,23 @@ class Shop extends MY_Controller
 			]
 		)
 			->join('category')
-			->paginate($page)->where('type', 'L')->where('delete', 1)->get();
+			->paginate($page)->where('type', $type)->where('delete', 1)->get();
 		$this->_applyPriceFilter($data);
-		$data['total_rows'] = $this->shop->where('type', 'L')->where('delete', 1)->count();
+		$data['total_rows'] = $this->shop->where('type', $type)->where('delete', 1)->count();
 		$data['pagination'] = $this->shop->makePagination(
-			base_url('shop/men'),
+			base_url("shop/$slug"),
 			3,
 			$data['total_rows']
 		);
-		$data['gender']     = 'L';
+		$data['gender']     = $type;
 		$data['page']       = 'pages/users/shop';
 
 		$this->view($data);
 	}
 
-	public function women($page = null)
-	{
-		$data['title']      = 'Produk Wanita';
-		$this->_applyPriceFilter($data);
-		$data['content']    = $this->shop->select(
-			[
-				'product.id', 'product.title AS product_title',
-				'product.image', 'product.price', 'product.slug As product_slug',
-				'category.title AS category_title', 'category.slug AS category_slug'
-			]
-		)
-			->join('category')
-			->paginate($page)->where('type', 'W')->where('delete', 1)->get();
-		$this->_applyPriceFilter($data);
-		$data['total_rows'] = $this->shop->where('type', 'W')->where('delete', 1)->count();
-		$data['pagination'] = $this->shop->makePagination(
-			base_url('shop/women'),
-			3,
-			$data['total_rows']
-		);
-		$data['gender']     = 'W';
-		$data['page']       = 'pages/users/shop';
-
-		$this->view($data);
-	}
-
-	public function unisex($page = null)
-	{
-		$data['title']      = 'Produk Unisex';
-		$this->_applyPriceFilter($data);
-		$data['content']    = $this->shop->select(
-			[
-				'product.id', 'product.title AS product_title',
-				'product.image', 'product.price', 'product.slug As product_slug',
-				'category.title AS category_title', 'category.slug AS category_slug'
-			]
-		)
-			->join('category')
-			->paginate($page)->where('type', 'U')->where('delete', 1)->get();
-		$this->_applyPriceFilter($data);
-		$data['total_rows'] = $this->shop->where('type', 'U')->where('delete', 1)->count();
-		$data['pagination'] = $this->shop->makePagination(
-			base_url('shop/unisex'),
-			3,
-			$data['total_rows']
-		);
-		$data['gender']     = 'U';
-		$data['page']       = 'pages/users/shop';
-
-		$this->view($data);
-	}
+	public function men($page = null)   { $this->_gender('L', 'Produk Pria', 'men', $page); }
+	public function women($page = null) { $this->_gender('W', 'Produk Wanita', 'women', $page); }
+	public function unisex($page = null){ $this->_gender('U', 'Produk Unisex', 'unisex', $page); }
 
 	public function category($category, $page = null)
 	{
@@ -205,13 +158,17 @@ class Shop extends MY_Controller
 
 	public function search($page = null)
 	{
-		if (isset($_POST['keyword'])) {
+		if ($this->input->post('keyword')) {
 			$this->session->set_userdata('keyword', $this->input->post('keyword'));
-		} else {
-			redirect(base_url('/'));
 		}
 
-		$keyword	= $this->session->userdata('keyword');
+		$keyword = $this->session->userdata('keyword');
+
+		if (!$keyword) {
+			redirect(base_url('/'));
+			return;
+		}
+
 		$data['title']		= 'Pencarian: Produk';
 		$this->_applyPriceFilter($data);
 		$data['content']	= $this->shop->select(
@@ -227,12 +184,24 @@ class Shop extends MY_Controller
 			]
 		)
 			->join('category')
-			->like('product.title', $keyword)
-			->orLike('product.description', $keyword)
-			->paginate($page)
-			->get();
+			->where('product.is_available', 1)
+			->where('delete', 1);
+
+		$this->db->group_start();
+		$this->db->like('product.title', $keyword);
+		$this->db->or_like('product.description', $keyword);
+		$this->db->group_end();
+
+		$data['content'] = $this->shop->paginate($page)->get();
+
 		$this->_applyPriceFilter($data);
-		$data['total_rows']	= $this->shop->like('product.title', $keyword)->orLike('product.description', $keyword)->count();
+		$this->shop->where('product.is_available', 1)->where('delete', 1);
+		$this->db->group_start();
+		$this->db->like('product.title', $keyword);
+		$this->db->or_like('product.description', $keyword);
+		$this->db->group_end();
+
+		$data['total_rows']	= $this->shop->count();
 		$data['pagination']	= $this->shop->makePagination(
 			base_url('shop/search'),
 			3,

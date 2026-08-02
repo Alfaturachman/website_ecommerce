@@ -25,17 +25,21 @@ class Slider extends MY_Controller
 
     public function search($page = null)
     {
-        if (isset($_POST['keyword'])) {
+        if ($this->input->post('keyword')) {
             $this->session->set_userdata('keyword', $this->input->post('keyword'));
-        } else {
-            redirect(base_url('admin/slider'));
         }
 
-        $keyword = $this->input->post('keyword');
+        $keyword = $this->session->userdata('keyword');
+
+        if (!$keyword) {
+            redirect(base_url('admin/slider'));
+            return;
+        }
+
         $data['title']      = 'Admin: Slider';
         $data['content']    = $this->slider->like('title', $keyword)->paginate($page)->get();
         $data['total_rows'] = $this->slider->like('title', $keyword)->count();
-        $data['pagination'] = $this->slider->makePagination(base_url('admin/slider'), 3, $data['total_rows']);
+        $data['pagination'] = $this->slider->makePagination(base_url('admin/slider/search'), 3, $data['total_rows']);
         $data['page']       = 'pages/admin/slider/index';
 
         $this->viewAdmin($data);
@@ -110,7 +114,7 @@ class Slider extends MY_Controller
                 }
                 $data['input']->image = $upload['file_name'];
             } else {
-                redirect(base_url('admin/slider/create'));
+                redirect(base_url("admin/slider/edit/$id"));
             }
         }
 
@@ -142,7 +146,7 @@ class Slider extends MY_Controller
 
         if (!$slider) {
             $this->session->set_flashdata('warning', 'Maaf, data tidak ditemukan!');
-            redirect(base_url('admin/product'));
+            redirect(base_url('admin/slider'));
         }
 
         if ($this->slider->where('id', $id)->delete()) {

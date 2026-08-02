@@ -1,36 +1,48 @@
-.DS_Store
+# Environment & Sensitive Credentials
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
 
+# Application Cache & Logs
 application/cache/*
 !application/cache/index.html
-
 application/logs/*
 !application/logs/index.html
+*.log
+.phpunit.result.cache
 
-!application/*/.htaccess
+# Uploaded User Media (Preserve Directory Structures via index.html)
+images/confirm/*
+!images/confirm/index.html
+images/product/*
+!images/product/index.html
+images/profile/*
+!images/profile/index.html
+images/slider/*
+!images/slider/index.html
 
-composer.lock
-
-user_guide_src/build/*
-user_guide_src/cilexer/build/*
-user_guide_src/cilexer/dist/*
-user_guide_src/cilexer/pycilexer.egg-info/*
+# Dependencies
 /vendor/
 
-# IDE Files
-#-------------------------
-/nbproject/
-.idea/*
+# Operating System Files
+.DS_Store
+.DS_Store?
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
 
-## Sublime Text cache files
-*.tmlanguage.cache
-*.tmPreferences.cache
-*.stTheme.cache
+# IDE & Editor Files
+.idea/
+.vscode/
+*.swp
+*.swo
 *.sublime-workspace
 *.sublime-project
-/tests/tests/
-/tests/results/
+/nbproject/
 
-SOFTWARE_ARCHITECTURE_QUALITY.md
-user login, admin.txt
-nomadenstuff.sql
-ERD Diagram.jpg
+# Temporary SQL & Archive Dumps
+*.sql.gz
+*.rar
+*.tar.gz

@@ -37,7 +37,7 @@ class Login_model extends MY_Model
     {
         $query = $this->where('email', strtolower($input->email))->where('is_active', 1)->first();
 
-        if (!empty($query) && hashEncryptVerify($input->password, $query->password)) {
+        if (!empty($query) && password_verify($input->password, $query->password)) {
             $sess_data = [
                 'id'        => $query->id,
                 'name'      => $query->name,

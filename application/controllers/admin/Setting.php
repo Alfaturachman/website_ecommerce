@@ -29,7 +29,7 @@ class Setting extends MY_Controller
 		} else {
 			$data['input']	= (object) $this->input->post(null, true);
 			if ($data['input']->password !== '') {
-				$data['input']->password = hashEncrypt($data['input']->password);
+				$data['input']->password = password_hash($data['input']->password, PASSWORD_DEFAULT);
 			} else {
 				$data['input']->password = $data['content']->password;
 			}
@@ -55,7 +55,7 @@ class Setting extends MY_Controller
 
     public function unique_username()
 	{
-		$email		= $this->input->post('username');
+		$username	= $this->input->post('username');
 		$id			= $this->input->post('id');
 		$user		= $this->setting->where('username', $username)->first();
 
@@ -64,7 +64,7 @@ class Setting extends MY_Controller
 				return true;
 			}
 			$this->load->library('form_validation');
-			$this->form_validation->set_message('unique_email', '%s sudah digunakan!');
+			$this->form_validation->set_message('unique_username', '%s sudah digunakan!');
 			return false;
 		}
 

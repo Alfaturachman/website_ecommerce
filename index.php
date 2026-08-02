@@ -58,7 +58,23 @@
  *
  * NOTE: If you change these, also change the error_reporting() code below
  */
-	define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
+// Load .env environment variables if file exists
+if (file_exists(__DIR__ . '/.env')) {
+    $envLines = file(__DIR__ . '/.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($envLines as $line) {
+        if (strpos(trim($line), '#') === 0) continue;
+        $parts = explode('=', $line, 2);
+        if (count($parts) === 2) {
+            $key = trim($parts[0]);
+            $value = trim($parts[1]);
+            putenv("{$key}={$value}");
+            $_ENV[$key] = $value;
+            $_SERVER[$key] = $value;
+        }
+    }
+}
+
+	define('ENVIRONMENT', getenv('ENVIRONMENT') ?: (isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development'));
 
 /*
  *---------------------------------------------------------------

@@ -23,13 +23,17 @@ class Category extends MY_Controller
 
     public function search($page = null)
     {
-        if (isset($_POST['keyword'])) {
+        if ($this->input->post('keyword')) {
             $this->session->set_userdata('keyword', $this->input->post('keyword'));
-        } else {
-            redirect(base_url('admin/category'));
         }
 
-        $keyword = $this->input->post('keyword');
+        $keyword = $this->session->userdata('keyword');
+
+        if (!$keyword) {
+            redirect(base_url('admin/category'));
+            return;
+        }
+
         $data['title']      = 'Admin Kategori';
         $data['content']    = $this->category->like('title', $keyword)->paginate($page)->get();
         $data['total_rows'] = $this->category->like('title', $keyword)->count();

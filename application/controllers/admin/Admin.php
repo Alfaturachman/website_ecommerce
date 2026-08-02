@@ -54,18 +54,6 @@ class Admin extends CI_Controller
         }
     }
 
-    public function add() {
-        $data = [
-            'name'      => 'Admin',
-            'username'  => 'admin',
-            'password'  => password_hash('admin', PASSWORD_DEFAULT),
-            'role'      => 'admin'
-        ];
-        $this->db->insert('admin', $data);
-        
-        redirect('admin','refresh');
-    }
-
     public function logout()
     {
         $this->session->unset_userdata('name');

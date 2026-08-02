@@ -46,7 +46,7 @@ class Cart extends MY_Controller
             if ($cart) {
                 // Produk sudah ada di keranjang, tidak perlu menambah kuantitas
                 $this->session->set_flashdata('warning', 'Barang sudah ada di keranjang.');
-                redirect(base_url("shop/detail/$input->id_product"));
+                redirect(base_url("shop/detail/$product->slug"));
             }
 
             // Produk belum ada di keranjang, tambahkan
@@ -86,7 +86,8 @@ class Cart extends MY_Controller
             redirect(base_url('cart'));
         }
 
-        $data['content'] = $this->cart->where('id', $id)->first();
+        $this->cart->table = 'cart';
+        $data['content'] = $this->cart->where('id', $id)->where('id_user', $this->id)->first();
 
         if (!$data['content']) {
             $this->session->set_flashdata('warning', 'Data tidak ditemukan');
@@ -106,8 +107,8 @@ class Cart extends MY_Controller
         ];
 
         $this->cart->table  = 'cart';
-        if ($this->cart->where('id', $id)->update($cart)) {
-            $this->session->set_flashdata('success', 'Produk berhasil ditambahkan!');
+        if ($this->cart->where('id', $id)->where('id_user', $this->id)->update($cart)) {
+            $this->session->set_flashdata('success', 'Keranjang berhasil diperbarui!');
         } else {
             $this->session->set_flashdata('error', 'Oops! Terjadi kesalahan.');
         }
@@ -122,7 +123,8 @@ class Cart extends MY_Controller
             redirect(base_url('cart'));
         }
 
-        $data['content'] = $this->cart->where('id', $id)->first();
+        $this->cart->table  = 'cart';
+        $data['content'] = $this->cart->where('id', $id)->where('id_user', $this->id)->first();
 
         if (!$data['content']) {
             $this->session->set_flashdata('warning', 'Data tidak ditemukan');
@@ -135,7 +137,7 @@ class Cart extends MY_Controller
             'message'  => $data['input']->message
         ];
 
-        if ($this->cart->where('id', $id)->update($cart)) {
+        if ($this->cart->where('id', $id)->where('id_user', $this->id)->update($cart)) {
             $this->session->set_flashdata('success', 'Pesan berhasil diupdate!');
         } else {
             $this->session->set_flashdata('error', 'Oops! Terjadi kesalahan.');
@@ -150,12 +152,13 @@ class Cart extends MY_Controller
             redirect(base_url('cart'));
         }
 
-        if (!$this->cart->where('id', $id)->first()) {
+        $this->cart->table = 'cart';
+        if (!$this->cart->where('id', $id)->where('id_user', $this->id)->first()) {
             $this->session->set_flashdata('warning', 'Maaf! Data tidak ditemukan.');
             redirect(base_url('cart'));
         }
 
-        if ($this->cart->where('id', $id)->delete()) {
+        if ($this->cart->where('id', $id)->where('id_user', $this->id)->delete()) {
             $this->session->set_flashdata('success', 'Data sudah berhasil dihapus!');
         } else {
             $this->session->set_flashdata('error', 'Oops! Terjadi suatu kesalahan.');

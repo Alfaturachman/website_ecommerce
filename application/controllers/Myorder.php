@@ -61,16 +61,12 @@ class Myorder extends MY_Controller
 
     public function detail($invoice)
     {
-        $data['order'] = $this->myorder->where('invoice', $invoice)->first();
+        $this->myorder->table = 'orders';
+        $data['order'] = $this->myorder->where('invoice', $invoice)->where('id_user', $this->id)->first();
         if (!$data['order']) {
             $this->session->set_flashdata('warning', 'Data tidak ditemukan.');
             redirect(base_url('/myorder'));
         }
-
-        $checkoutEndTime = strtotime('+60 minutes');
-
-        // Simpan waktu selesai checkout ke dalam session
-        $this->session->set_userdata('checkout_end_time', $checkoutEndTime);
 
         $this->myorder->table   = 'order_detail';
         $data['order_detail']   = $this->myorder->select([
@@ -99,7 +95,8 @@ class Myorder extends MY_Controller
 
     public function confirm($invoice)
     {
-        $data['order'] = $this->myorder->where('invoice', $invoice)->first();
+        $this->myorder->table = 'orders';
+        $data['order'] = $this->myorder->where('invoice', $invoice)->where('id_user', $this->id)->first();
 
         if (!$data['order']) {
             $this->session->set_flashdata('warning', 'Data tidak ditemukan.');
@@ -136,6 +133,7 @@ class Myorder extends MY_Controller
             return;
         }
 
+        $data['input']->id_orders = $data['order']->id;
         $this->myorder->table = 'order_confirm';
 
         if ($this->myorder->create($data['input'])) {
@@ -167,7 +165,8 @@ class Myorder extends MY_Controller
 
     public function cancel($invoice)
     {
-        $data['order'] = $this->myorder->where('invoice', $invoice)->first();
+        $this->myorder->table = 'orders';
+        $data['order'] = $this->myorder->where('invoice', $invoice)->where('id_user', $this->id)->first();
 
         // Cek apakah pesanan ditemukan
         if (!$data['order']) {

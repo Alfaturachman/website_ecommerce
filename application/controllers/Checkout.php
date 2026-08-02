@@ -55,7 +55,6 @@ class Checkout extends MY_Controller
     {
         if (!$this->input->post()) {
             $this->session->set_flashdata('error', 'No POST data received!');
-            error_log('No POST data received.');
             redirect(base_url('checkout'));
         } else {
             $input = (object) $this->input->post(null, true);
@@ -63,21 +62,49 @@ class Checkout extends MY_Controller
 
         $id_kabupaten = $this->input->post('kabupaten');
         $id_provinsi = $this->input->post('provinsi');
-        $diskonpersen = $this->input->post('discountPercentage');
-        $diskon = $this->input->post('diskon');
-        $shippingCost = $this->input->post('shippingCost');
-        $totalBelanja = $this->input->post('totalBelanja');
-        error_log('Shipping Cost: ' . $shippingCost);
-        error_log('Total Belanja: ' . $totalBelanja);
         $courier = $input->courier;
+
+        // Recalculate cart subtotal server-side to prevent price tampering
+        $cartItems = $this->db->select('cart.quantity, product.price')
+            ->from('cart')
+            ->join('product', 'product.id = cart.id_product')
+            ->where('cart.id_user', $this->id)
+            ->get()
+            ->result();
+
+        if (empty($cartItems)) {
+            $this->session->set_flashdata('error', 'Keranjang belanja kosong!');
+            redirect(base_url('cart'));
+        }
+
+        $subtotal = 0;
+        $totalQuantity = 0;
+        foreach ($cartItems as $item) {
+            $subtotal += ($item->price * $item->quantity);
+            $totalQuantity += $item->quantity;
+        }
+
+        // Recalculate shipping cost server-side via RajaOngkir
+        $berat = $totalQuantity * 250;
+        $costResponse = json_decode($this->rajaongkir->cost(152, (int) $id_kabupaten, $berat, $courier), true);
+        $shippingCost = 0;
+        if (isset($costResponse['rajaongkir']['results'][0]['costs'][0]['cost'][0]['value'])) {
+            $shippingCost = (int) $costResponse['rajaongkir']['results'][0]['costs'][0]['cost'][0]['value'];
+        } else {
+            $shippingCost = (int) $this->input->post('shippingCost');
+        }
+
+        $diskonpersen = (float) $this->input->post('discountPercentage');
+        $diskon = round(($subtotal * $diskonpersen) / 100);
+        $totalBelanja = ($subtotal - $diskon) + $shippingCost;
 
         // Get province name
         $province = json_decode($this->rajaongkir->province((int) $id_provinsi), true);
-        $provinceName = $province['rajaongkir']['results']['province'];
+        $provinceName = isset($province['rajaongkir']['results']['province']) ? $province['rajaongkir']['results']['province'] : '';
 
         // Get city name
         $cityState = json_decode($this->rajaongkir->city((int) $id_provinsi, (int) $id_kabupaten), true);
-        $cityName = $cityState['rajaongkir']['results']['city_name'];
+        $cityName = isset($cityState['rajaongkir']['results']['city_name']) ? $cityState['rajaongkir']['results']['city_name'] : '';
 
         // Prepare data for order creation
         $data = [

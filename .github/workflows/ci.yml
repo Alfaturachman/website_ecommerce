@@ -1,0 +1,31 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    name: Build & Run Test Suite
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Codebase
+        uses: actions/checkout@v3
+
+      - name: Setup PHP Environment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, pdo, pdo_mysql, mysqli, gd, zip
+          coverage: none
+
+      - name: Validate PHP Syntax (Lint)
+        run: |
+          find application/ -type f -name "*.php" -exec php -l {} \;
+          find system/ -type f -name "*.php" -exec php -l {} \;
+
+      - name: Run Unit and Feature Test Suite
+        run: php tests/run_tests.php

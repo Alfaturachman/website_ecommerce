@@ -38,13 +38,17 @@ class Product extends MY_Controller
 
     public function search($page = null)
     {
-        if (isset($_POST['keyword'])) {
+        if ($this->input->post('keyword')) {
             $this->session->set_userdata('keyword', $this->input->post('keyword'));
-        } else {
-            redirect(base_url('admin/product'));
         }
 
-        $keyword = $this->input->post('keyword');
+        $keyword = $this->session->userdata('keyword');
+
+        if (!$keyword) {
+            redirect(base_url('admin/product'));
+            return;
+        }
+
         $data['title']      = 'Admin Product';
         $data['content']    = $this->product->select(
             ['product.id', 'product.title AS product_title', 'product.price', 'product.is_available', 'product.image', 'category.title AS category_title']
@@ -130,7 +134,7 @@ class Product extends MY_Controller
                 }
                 $data['input']->image = $upload['file_name'];
             } else {
-                redirect(base_url('admin/product/create'));
+                redirect(base_url("admin/product/edit/$id"));
             }
         }
 

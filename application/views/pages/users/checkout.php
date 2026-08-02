@@ -69,15 +69,14 @@
                         <?= form_error('address') ?>
                     </div>
 
-                    <?php $data_provinsi = isset($provinces) ? $provinces : getRajaOngkirProvinces(); ?>
                     <div class="form-group">
                         <label class="form-label">Province</label>
                         <select id='provinsi' name='provinsi' class="form-select">
                             <option value="" selected disabled>- Select Province -</option>
-                            <?php if ($data_provinsi && isset($data_provinsi['rajaongkir']['results'])) : ?>
-                            <?php for ($i = 0; $i < count($data_provinsi['rajaongkir']['results']); $i++) : ?>
-                                <option value="<?= e($data_provinsi['rajaongkir']['results'][$i]['province_id']) ?>">
-                                    <?= e($data_provinsi['rajaongkir']['results'][$i]['province']) ?>
+                            <?php if ($provinces && isset($provinces['rajaongkir']['results'])) : ?>
+                            <?php for ($i = 0; $i < count($provinces['rajaongkir']['results']); $i++) : ?>
+                                <option value="<?= e($provinces['rajaongkir']['results'][$i]['province_id']) ?>">
+                                    <?= e($provinces['rajaongkir']['results'][$i]['province']) ?>
                                 </option>
                             <?php endfor; ?>
                             <?php endif ?>
